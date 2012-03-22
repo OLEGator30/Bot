@@ -2,3 +2,4 @@
 Prog
 *.o
 *~
+deps.mk
