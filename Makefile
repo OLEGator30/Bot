@@ -1,7 +1,7 @@
 CXX= g++
 CXXFLAGS= -g -Wall
 
-SRCMODULES= scaner/scaner.cpp other/buffer.cpp 
+SRCMODULES= scaner/scaner.cpp buffer/buffer.cpp 
 OBJMODULES= $(SRCMODULES:.cpp=.o)
 
 default: Prog
@@ -19,4 +19,4 @@ deps.mk: $(SRCMODULES)
 	$(CXX) -MM $^ > $@
 
 clean:
-	rm -f Prog other/*.o  other/*~ scaner/*.o scaner/*~
+	rm -f Prog buffer/*.o  buffer/*~ scaner/*.o scaner/*~
