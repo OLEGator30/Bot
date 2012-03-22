@@ -2,9 +2,18 @@
 #define SCANER_HPP
 
 #include "../other/buffer.hpp"
-#include "../other/list.hpp"
 
-enum states	{ Home, Number, Ident, Key, Assign, String, };
+enum states { Home, Number, Ident, Key, Assign, String };
+
+struct lexlist
+{
+	classbuf lexeme;
+	char type;
+	int line;
+	lexlist* next;
+
+	lexlist(): type(0), line(0), next(0) {}
+};
 
 class scaner
 {
