@@ -7,10 +7,16 @@ class classbuf
 	int size;
 	int weight;
 
+	void doublebuf();
+
 	public:
 
 	classbuf();
-	~classbuf() { delete[] buffer; }
+	~classbuf();
+	void write(char*);
+	void write(char);
+	char* read() const;
+	void free();
 };
 
 #endif
