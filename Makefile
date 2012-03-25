@@ -19,4 +19,4 @@ deps.mk: $(SRCMODULES)
 	$(CXX) -MM $^ > $@
 
 clean:
-	rm -f Prog buffer/*.o  buffer/*~ scaner/*.o scaner/*~
+	rm -f Prog deps.mk buffer/*.o  buffer/*~ scaner/*.o scaner/*~
