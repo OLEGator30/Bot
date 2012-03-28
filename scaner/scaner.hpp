@@ -1,29 +1,39 @@
 #ifndef SCANER_HPP
 #define SCANER_HPP
 
-#include "../other/buffer.hpp"
+#include "../buffer/buffer.hpp"
 
-enum states { Home, Number, Ident, Key, Assign, String };
+extern const char* KeyWords[9];
+
+enum states { Home, Num, Ident, Key, Assign, Str };
+
+enum lextypes { Number, Identifier, KeyWord, String, Divider };
 
 struct lexlist
 {
 	classbuf lexeme;
-	char type;
+	lextypes type;
 	int line;
 	lexlist* next;
-
-	lexlist(): type(0), line(0), next(0) {}
 };
 
 class scaner
 {
 	states state;
 	classbuf buffer;
-	int symb;
+	int line;
+
+	void addnewlex(lexlist*,lextypes);
+	void addnewlex(lexlist*,char);
+	void homeproc(lexlist*,char);
+	void numproc(lexlist*,char);
+	void identproc(lexlist*,char);
+	void keyproc(lexlist*,char);
+	void assignproc(lexlist*,char);
 
 	public:
 
-	scaner(): symb(0) {};
+	scaner(): state(Home), line(1) {};
 	lexlist* run(int);
 };
 

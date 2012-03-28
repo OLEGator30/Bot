@@ -22,7 +22,7 @@ void classbuf::doublebuf()
 	buffer=temp;
 }
 
-void classbuf::write(char *str)
+void classbuf::write(const char *str)
 {
 	int len=strlen(str);
 

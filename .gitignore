@@ -3,3 +3,4 @@ Prog
 *.o
 *~
 deps.mk
+input.txt

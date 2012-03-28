@@ -13,7 +13,7 @@ class classbuf
 
 	classbuf();
 	~classbuf();
-	void write(char*);
+	void write(const char*);
 	void write(char);
 	char* read() const;
 	void free();
