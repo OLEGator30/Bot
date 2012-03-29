@@ -1,4 +1,4 @@
-//#include <unistd.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "scaner.hpp"
@@ -12,9 +12,10 @@ const char* KeyWords[9]=
 lexlist* scaner::run(int fd)
 {
 	lexlist *list;
-	int c;
+	int c,tempfd=30;
 
-	// fd->0
+	dup2(0,tempfd);
+	dup2(fd,0);
 	list=new lexlist;
 	list->next=0;
 	try
@@ -51,6 +52,7 @@ lexlist* scaner::run(int fd)
 		err.print();
 		return 0;
 	}
+	dup2(tempfd,0);
 	return list;
 }
 
