@@ -3,11 +3,10 @@
 #include "errors.hpp"
 #include "../buffer/buffer.hpp"
 
-errors::errors(int ln,const char* str)
+errors::errors(const char* str)
 {
 	int len=strlen(str);
 
-	line=ln;
 	msg=new char[len+1];
 	strcpy(msg,str);
 }

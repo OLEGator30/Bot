@@ -3,37 +3,65 @@
 
 #include "../buffer/buffer.hpp"
 
-extern const char* KeyWords[9];
+extern const char* StrKeyWords[9];
 
-enum states { Home, Num, Ident, Key, Assign, Str };
+enum FSMState { Home, Num, Fun, Var, Lab, Key, Str, Equ };
+enum LexType { KeyWord, Function, Variable, Label, Number, String,
+																	Equal, Operation, Bracket, Divider };
 
-enum lextypes { Number, Identifier, KeyWord, String, Divider };
+int strtoint (char*);
+const char* states2str(LexType);
 
 struct lexlist
 {
-	classbuf lexeme;
-	lextypes type;
+	char* lexstr;
+	int lexnum;
+	LexType type;
 	int line;
 	lexlist* next;
+
+	lexlist();
+	void print();
+};
+
+class fsm
+{
+	FSMState state;
+	classbuf buffer;
+
+	bool inbrackets(char);
+	bool individers(char);
+	bool inspaces(char);
+	bool inchar(char);
+	bool inoperations(char);
+	lexlist* homeproc(char);
+	lexlist* numproc(char);
+	lexlist* funproc(char);
+	lexlist* varproc(char);
+	lexlist* labproc(char);
+	lexlist* keyproc(char);
+	lexlist* equproc(char);
+	lexlist* addnewlex(char,LexType);
+	lexlist* addnewlex(char*,LexType);
+
+	public:
+
+	fsm(): state(Home) {}
+	lexlist* newchar(char);
 };
 
 class scaner
 {
-	states state;
-	classbuf buffer;
+	fsm myfsm;
 	int line;
+	lexlist* begin;
+	lexlist* end;
 
-	void addnewlex(lexlist*,lextypes);
-	void addnewlex(lexlist*,char);
-	void homeproc(lexlist*,char);
-	void numproc(lexlist*,char);
-	void identproc(lexlist*,char);
-	void keyproc(lexlist*,char);
-	void assignproc(lexlist*,char);
+	lexlist* addnewlex(lexlist*,lexlist*,int);
 
 	public:
 
-	scaner(): state(Home), line(1) {};
+	scaner(): line(1), begin(0), end(0) {};
 	lexlist* run(int);
 };
 
