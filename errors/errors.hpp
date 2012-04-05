@@ -4,12 +4,11 @@
 class errors
 {
 	char* msg;
+	int line;
 
 	public:
 
-	int line;
-
-	errors(const char*);
+	errors(const char*,int);
 	~errors();
 	void print() const;
 };

@@ -3,12 +3,13 @@
 #include "errors.hpp"
 #include "../buffer/buffer.hpp"
 
-errors::errors(const char* str)
+errors::errors(const char* str,int ln)
 {
 	int len=strlen(str);
 
 	msg=new char[len+1];
 	strcpy(msg,str);
+	line=ln;
 }
 
 errors::~errors()
@@ -18,11 +19,5 @@ errors::~errors()
 
 void errors::print() const
 {
-	classbuf tmp;
-	char str[5];
-
-	sprintf(str,"line %d: ",line);
-	tmp.write(str);
-	tmp.write(msg);
-	printf("%s",tmp.read());
+	printf("%3.d: %s",line,msg);
 }

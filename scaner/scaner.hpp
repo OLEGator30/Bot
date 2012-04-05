@@ -28,6 +28,7 @@ class fsm
 {
 	FSMState state;
 	classbuf buffer;
+	int line;
 
 	bool inbrackets(char);
 	bool individers(char);
@@ -41,13 +42,13 @@ class fsm
 	lexlist* labproc(char);
 	lexlist* keyproc(char);
 	lexlist* equproc(char);
-	lexlist* addnewlex(char,LexType);
-	lexlist* addnewlex(char*,LexType);
+	lexlist* addnewlex(char,LexType,int);
+	lexlist* addnewlex(char*,LexType,int);
 
 	public:
 
 	fsm(): state(Home) {}
-	lexlist* newchar(char);
+	lexlist* newchar(char,int);
 };
 
 class scaner
@@ -57,7 +58,7 @@ class scaner
 	lexlist* begin;
 	lexlist* end;
 
-	lexlist* addnewlex(lexlist*,lexlist*,int);
+	lexlist* addnewlex(lexlist*,lexlist*);
 
 	public:
 
