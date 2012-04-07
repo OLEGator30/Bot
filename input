@@ -1,7 +1,6 @@
-asdqsd
 @begin:
 	print "Month #" ?turn();
-	buy 2 ?raw_price;
+	buy 2 ?raw_price();
 	sell ?production(?my_id()) ?production_price();
 	$toprod=2;
 	if ?raw(?my_id())<$toprod then
@@ -9,8 +8,5 @@ asdqsd
 	prod $toprod;
 	endturn;
 	goto @begin;
-
 []
-(((((((())))))))
-$ssssssss;
 ==

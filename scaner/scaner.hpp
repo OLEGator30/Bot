@@ -5,7 +5,6 @@
 
 extern const char* StrKeyWords[9];
 
-enum FSMState { Home, Num, Fun, Var, Lab, Key, Str, Equ };
 enum LexType { KeyWord, Function, Variable, Label, Number, String,
 																	Equal, Operation, Bracket, Divider };
 
@@ -26,7 +25,7 @@ struct lexlist
 
 class fsm
 {
-	FSMState state;
+	enum FSMState { Home, Num, Fun, Var, Lab, Key, Str, Equ } state;
 	classbuf buffer;
 	int line;
 
@@ -43,7 +42,7 @@ class fsm
 	lexlist* keyproc(char);
 	lexlist* equproc(char);
 	lexlist* addnewlex(char,LexType,int);
-	lexlist* addnewlex(char*,LexType,int);
+	lexlist* addnewlex(LexType,int);
 
 	public:
 
