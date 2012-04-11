@@ -219,13 +219,13 @@ lexlist* fsm::labproc(char c)
 	lexlist *temp;
 
 	if (inchar(c)) { buffer.write(c); return 0; }
-	else if (c==':') { temp=addnewlex(Label,line); return temp; }
 	else if (individers(c))
 	{
 		temp=addnewlex(Label,line);
 		temp->next=addnewlex(c,Divider,line);
 		return temp;
 	}
+	else if (inspaces(c)) { temp=addnewlex(Label,line); return temp; }
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw errors(buffer.read(),line);
@@ -252,13 +252,18 @@ lexlist* fsm::equproc(char c)
 {
 	lexlist *temp;
 
-	if (c=='=')	{ temp=addnewlex('=',Equal,line); state=Home; return temp; }
-	else if (inspaces(c))
-					{ temp=addnewlex('=',Operation,line); state=Home; return temp; }
+	if (c=='=')	{ temp=addnewlex('=',Equal,line); return temp; }
+	else if (inspaces(c)) { temp=addnewlex('=',Operation,line); return temp; }
 	else if (inbrackets(c))
 	{
 		temp=addnewlex('=',Operation,line);
 		temp->next=addnewlex(c,Bracket,line);
+		return temp;
+	}
+	else if (inoperations(c))
+	{
+		temp=addnewlex('=',Operation,line);
+		temp->next=addnewlex(c,Operation,line);
 		return temp;
 	}
 	else if ((c>='0')&&(c<='9'))
