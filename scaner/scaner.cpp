@@ -193,7 +193,7 @@ lexlist* fsm::varproc(char c)
 {
 	lexlist *temp;
 
-	if (inchar(c)) { buffer.write(c); return 0; }
+	if ((inchar(c))||(c=='[')||(c==']')) { buffer.write(c); return 0; }
 	else if (inoperations(c))
 	{
 		temp=addnewlex(Variable,line);
@@ -243,6 +243,12 @@ lexlist* fsm::keyproc(char c)
 		return temp;
 	}
 	else if (inspaces(c)) { temp=addnewlex(KeyWord,line); return temp; }
+	else if (inbrackets(c))
+	{
+		temp=addnewlex(KeyWord,line);
+		temp->next=addnewlex(c,Bracket,line);
+		return temp;
+	}
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw errors(buffer.read(),line);
