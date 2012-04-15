@@ -2,6 +2,7 @@
 #define SCANER_HPP
 
 #include "../buffer/buffer.hpp"
+#include "../errors/errors.hpp"
 
 extern const char* StrKeyWords[9];
 
@@ -47,7 +48,7 @@ class fsm
 	public:
 
 	fsm(): state(Home) {}
-	lexlist* newchar(char,int);
+	lexlist* newchar(int,int);
 };
 
 class scaner

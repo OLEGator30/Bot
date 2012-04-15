@@ -13,4 +13,20 @@ class errors
 	void print() const;
 };
 
+class scanerr : public errors
+{
+	public:
+
+	scanerr(const char*,int);
+	~scanerr() {}
+};
+
+class parserr : public errors
+{
+	public:
+
+	parserr(const char*,int);
+	~parserr() {}
+};
+
 #endif

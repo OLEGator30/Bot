@@ -21,3 +21,7 @@ void errors::print() const
 {
 	printf("%3.d: %s",line,msg);
 }
+
+scanerr::scanerr(const char* str,int line):errors(str,line) {}
+
+parserr::parserr(const char* str,int line):errors(str,line) {}

@@ -5,10 +5,12 @@
 #include <sys/stat.h>
 #include <fcntl.h>	
 #include "scaner/scaner.hpp"
+#include "parser/parser.hpp"
 
 int main()
 {
 	scaner scan;
+	parser pars;
 	int fd;
 	lexlist *list;
 
@@ -17,17 +19,30 @@ int main()
 		perror("input");
 		exit(1);
 	}
-	list=scan.run(fd); // launch scanner
+	try
+	{
+		list=scan.run(fd); // launch scaner
+		close(fd);
+		pars.run(list); // launch parser
+	}
+	catch (const scanerr &err)
+	{
+		err.print();
+		return 1;
+	}
+	catch (const parserr &err)
+	{
+		err.print();
+		return 1;
+	}
 
-	while (list)
+	while (list) // print and free
 	{
 		list->print();
 		lexlist *p=list;
 		list=list->next;
 		delete p;
 	}
-
-	close(fd);
 	return 0;
 }
 
