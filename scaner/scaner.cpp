@@ -128,10 +128,9 @@ lexlist* fsm::homeproc(char c)
 	else if (c=='"') { state=Str; return 0; }
 	else if (inchar(c)) { state=Key; buffer.write(c); return 0; }
 	//       ^ use only after numbers!!
-	else if (inoperations(c))
-												{ temp=addnewlex(c,Operation,line); return temp; }
-	else if (inbrackets(c)) { temp=addnewlex(c,Bracket,line); return temp; }
-	else if (individers(c)) { temp=addnewlex(c,Divider,line); return temp; }
+	else if (inoperations(c)) { temp=addnewlex(c,Operation); return temp; }
+	else if (inbrackets(c)) { temp=addnewlex(c,Bracket); return temp; }
+	else if (individers(c)) { temp=addnewlex(c,Divider); return temp; }
 	else if (inspaces(c)) return 0;
 	else if (c=='=') { state=Equ; return 0; }
 	char s[32];
@@ -146,24 +145,24 @@ lexlist* fsm::numproc(char c)
 	if ((c>='0')&&(c<='9')) { buffer.write(c); return 0; }
 	else if (inoperations(c))
 	{
-		temp=addnewlex(Number,line);
-		temp->next=addnewlex(c,Operation,line);
+		temp=addnewlex(Number);
+		temp->next=addnewlex(c,Operation);
 		return temp;
 	}
 	else if (inbrackets(c))
 	{
-		temp=addnewlex(Number,line);
-		temp->next=addnewlex(c,Bracket,line);
+		temp=addnewlex(Number);
+		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
 	else if (individers(c))
 	{
-		temp=addnewlex(Number,line);
-		temp->next=addnewlex(c,Divider,line);
+		temp=addnewlex(Number);
+		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(Number,line); return temp; }
-	else if (c=='=') { temp=addnewlex(Number,line); state=Equ; return temp; }
+	else if (inspaces(c)) { temp=addnewlex(Number); return temp; }
+	else if (c=='=') { temp=addnewlex(Number); state=Equ; return temp; }
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -174,11 +173,11 @@ lexlist* fsm::funproc(char c)
 	lexlist *temp;
 
 	if (inchar(c)) { buffer.write(c); return 0; }
-	else if (inspaces(c)) { temp=addnewlex(Function,line); return temp; }
+	else if (inspaces(c)) { temp=addnewlex(Function); return temp; }
 	else if (inbrackets(c))
 	{
-		temp=addnewlex(Function,line);
-		temp->next=addnewlex(c,Bracket,line);
+		temp=addnewlex(Function);
+		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
 	buffer.write(c);
@@ -190,29 +189,27 @@ lexlist* fsm::varproc(char c)
 {
 	lexlist *temp;
 
-	if ((inchar(c))||(c=='[')||(c==']')) { buffer.write(c); return 0; }
-	//                ^ for array
+	if (inchar(c)) { buffer.write(c); return 0; }
 	else if (inoperations(c))
 	{
-		temp=addnewlex(Variable,line);
-		temp->next=addnewlex(c,Operation,line);
+		temp=addnewlex(Variable);
+		temp->next=addnewlex(c,Operation);
 		return temp;
 	}
 	else if (individers(c))
 	{
-		temp=addnewlex(Variable,line);
-		temp->next=addnewlex(c,Divider,line);
+		temp=addnewlex(Variable);
+		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
 	else if (inbrackets(c))
 	{
-		temp=addnewlex(Variable,line);
-		temp->next=addnewlex(c,Bracket,line);
+		temp=addnewlex(Variable);
+		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(Variable,line); return temp; }
-	else if (c=='=')
-						{ temp=addnewlex(Variable,line); state=Equ; return temp; }
+	else if (inspaces(c)) { temp=addnewlex(Variable); return temp; }
+	else if (c=='=') { temp=addnewlex(Variable); state=Equ; return temp; }
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -225,11 +222,11 @@ lexlist* fsm::labproc(char c)
 	if (inchar(c)) { buffer.write(c); return 0; }
 	else if (individers(c))
 	{
-		temp=addnewlex(Label,line);
-		temp->next=addnewlex(c,Divider,line);
+		temp=addnewlex(Label);
+		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(Label,line); return temp; }
+	else if (inspaces(c)) { temp=addnewlex(Label); return temp; }
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -242,15 +239,15 @@ lexlist* fsm::keyproc(char c)
 	if (inchar(c)) { buffer.write(c); return 0; }
 	else if (individers(c))
 	{
-		temp=addnewlex(KeyWord,line);
-		temp->next=addnewlex(c,Divider,line);
+		temp=addnewlex(KeyWord);
+		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(KeyWord,line); return temp; }
+	else if (inspaces(c)) { temp=addnewlex(KeyWord); return temp; }
 	else if (inbrackets(c))
 	{
-		temp=addnewlex(KeyWord,line);
-		temp->next=addnewlex(c,Bracket,line);
+		temp=addnewlex(KeyWord);
+		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
 	buffer.write(c);
@@ -262,31 +259,24 @@ lexlist* fsm::equproc(char c)
 {
 	lexlist *temp;
 
-	if (c=='=')	{ temp=addnewlex('=',Equal,line); return temp; }
-	else if (inspaces(c)) { temp=addnewlex('=',Operation,line); return temp; }
+	if (c=='=')	{ temp=addnewlex('=',Equal); return temp; }
+	else if (inspaces(c)) { temp=addnewlex('=',Operation); return temp; }
 	else if (inbrackets(c))
 	{
-		temp=addnewlex('=',Operation,line);
-		temp->next=addnewlex(c,Bracket,line);
+		temp=addnewlex('=',Operation);
+		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
 	else if (inoperations(c))
 	{
-		temp=addnewlex('=',Operation,line);
-		temp->next=addnewlex(c,Operation,line);
+		temp=addnewlex('=',Operation);
+		temp->next=addnewlex(c,Operation);
 		return temp;
 	}
 	else if ((c>='0')&&(c<='9'))
-	{
-		temp=addnewlex('=',Operation,line);
-		buffer.write(c);
-		state=Num;
-		return temp;
-	}
-	else if (c=='$')
-					{ temp=addnewlex('=',Operation,line); state=Var; return temp; }
-	else if (c=='?')
-					{ temp=addnewlex('=',Operation,line); state=Fun; return temp; }
+	{temp=addnewlex('=',Operation); buffer.write(c); state=Num; return temp;}
+	else if (c=='$') {temp=addnewlex('=',Operation); state=Var; return temp;}
+	else if (c=='?') {temp=addnewlex('=',Operation); state=Fun; return temp;}
 	buffer.write('='); buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -300,7 +290,11 @@ lexlist* fsm::newchar(int c,int ln)
 		if (state!=Home)
 			throw scanerr("unexpected end of file\n",line);
 		else
-			return 0;
+		{
+			lexlist *tmp;
+			tmp=addnewlex();
+			return tmp;
+		}
 	else
 		switch (state)
 		{
@@ -314,13 +308,13 @@ lexlist* fsm::newchar(int c,int ln)
 			case Key: return keyproc(c);
 			case Equ: return equproc(c);
 			case Str:
-				if (c=='"') { temp=addnewlex(String,line); return temp; }
+				if (c=='"') { temp=addnewlex(String); return temp; }
 				else { buffer.write(c); return 0; }
 		}
 	return 0; // g++ wants it...
 }
 
-lexlist* fsm::addnewlex(LexType type,int line)
+lexlist* fsm::addnewlex(LexType type)
 {
 	lexlist *p;
 	p=new lexlist;
@@ -359,7 +353,7 @@ lexlist* fsm::addnewlex(LexType type,int line)
 	else throw scanerr("empty name\n",line);
 }
 
-lexlist* fsm::addnewlex(char c,LexType type,int line)
+lexlist* fsm::addnewlex(char c,LexType type)
 {
 	lexlist *p;
 
@@ -368,5 +362,16 @@ lexlist* fsm::addnewlex(char c,LexType type,int line)
 	p->type=type;
 	p->lexnum=c;
 	state=Home;
+	return p;
+}
+
+lexlist* fsm::addnewlex()
+{
+	lexlist *p;
+
+	p=new lexlist;
+	p->line=line;
+	p->type=KeyWord;
+	p->lexnum=sizeof(StrKeyWords);
 	return p;
 }

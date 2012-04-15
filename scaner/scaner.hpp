@@ -42,8 +42,9 @@ class fsm
 	lexlist* labproc(char);
 	lexlist* keyproc(char);
 	lexlist* equproc(char);
-	lexlist* addnewlex(char,LexType,int);
-	lexlist* addnewlex(LexType,int);
+	lexlist* addnewlex(char,LexType);
+	lexlist* addnewlex(LexType);
+	lexlist* addnewlex();
 
 	public:
 

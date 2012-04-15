@@ -36,13 +36,14 @@ int main()
 		return 1;
 	}
 
-	while (list) // print and free
+	while (list->next) // print except last node
 	{
 		list->print();
 		lexlist *p=list;
 		list=list->next;
 		delete p;
 	}
+	delete list;
 	return 0;
 }
 

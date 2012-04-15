@@ -6,8 +6,15 @@
 
 class parser
 {
+	lexlist *curlex;
+
+	void newlex();
+	void Prog();
+	void Block();
+
 	public:
 
+	parser(){}
 	void run(lexlist*);
 };
 
