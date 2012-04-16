@@ -1,27 +1,29 @@
-<Prog>			->	<Block> 'EOF'
-<Block>			->	'{' <LabState> { <LabState> } '}'
-<LabState>	->	<Label> <State>
-<Label>			->	labelname ':' | eps
-<State>			->	'if' '(' <Exp> ')' <SimpleSt> | <SimpleSt> ';'
-<SimpleSt>	->	<Block> |
-								'int' varname <VarArg> { ',' varname <VarArg> } |
-								varname '=' <Exp1> |
-								'goto' labname |
-								'print' <ArgList> |
-								'buy' <Arg2> | 'sell' <Arg2> |
-								'prod' <Arg1>
-								'build' | 'turn'
-<Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>
-<Exp1>			->	<Exp2> { <Op1> <Exp2> }
-<Exp2>			->	<Exp3> { <Op2> <Exp3> }
-<Exp3>			->	varname | number | <IntFun> |
-								'!' <Exp3> | '-' <Exp3> | '(' <Exp> ')' |
-<IntFun>		->	fuction <Arg> // <- ??
-<CompOp>		->	'==' | '<' | '>'
-<Op1>				->	'+' | '-' | '|'
-<Op2>				->	'*' | '/' | '%' | '&'
-<Arg1>			->	'(' <Exp2> ')'
-<Arg2>			->	'(' <Exp2> ',' <Exp2> ')'
-<VarArg>		->	'=' <Exp1> | eps
-<ArgList>		->	<ArgPrint> { ',' <ArgPrint> }
-<ArgPrint>	->	string | <Exp1>
+v	<Prog>			->	<Block> 'EOF'
+v	<Block>			->	'{' <LabState> { <LabState> } '}'
+v	<LabState>	->	<Lab> <State>
+v	<Lab>				->	labelname ':' | eps
+	<State>			->	'if' '(' <Exp> ')' <SimpleSt> | <SimpleSt> ';'
+	<SimpleSt>	->	<Block> |
+									'int' varname <VarArg> { ',' varname <VarArg> } |
+									varname <Array> '=' <Exp1> |
+									'goto' labname |
+									'print' <ArgList> |
+									'buy' <Arg2> | 'sell' <Arg2> |
+									'prod' <Arg1>
+									'build' | 'turn'
+	<Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>
+	<Exp1>			->	<Exp2> { <Op1> <Exp2> }
+	<Exp2>			->	<Exp3> { <Op2> <Exp3> }
+	<Exp3>			->	varname | number | <IntFun> |
+									'!' <Exp3> | '-' <Exp3> | '(' <Exp> ')' |
+	<IntFun>		->	fuction <Arg> // <- ??
+	<CompOp>		->	'==' | '<' | '>'
+	<Op1>				->	'+' | '-' | '|'
+	<Op2>				->	'*' | '/' | '%' | '&'
+	<Arg>				->	'(' ')'
+	<Arg1>			->	'(' <Exp2> ')'
+	<Arg2>			->	'(' <Exp2> ',' <Exp2> ')'
+	<VarArg>		->	'=' <Exp1> | eps
+	<Array>			->	'[' <Exp1> ']' | eps
+	<ArgList>		->	<ArgPrint> { ',' <ArgPrint> }
+	<ArgPrint>	->	string | <Exp1>

@@ -4,7 +4,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>	
-#include "scaner/scaner.hpp"
+#include "common/common.hpp"
+#include "scanner/scanner.hpp"
 #include "parser/parser.hpp"
 
 int main()

@@ -1,9 +1,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "errors.hpp"
-#include "../buffer/buffer.hpp"
 
-errors::errors(const char* str,int ln)
+scanerr::scanerr(const char* str,int ln)
 {
 	int len=strlen(str);
 
@@ -17,11 +16,34 @@ errors::~errors()
 	delete[] msg;
 }
 
-void errors::print() const
+void scanerr::print() const
 {
 	printf("%3.d: %s",line,msg);
 }
 
-scanerr::scanerr(const char* str,int line):errors(str,line) {}
+parserr::parserr(const char* str,lexlist* list)
+{
+	int len=strlen(str);
 
-parserr::parserr(const char* str,int line):errors(str,line) {}
+	msg=new char[len+1];
+	strcpy(msg,str);
+	curlex=list;
+}
+
+void parserr::print() const
+{
+	printf("%3.d: %s, but ",curlex->line,msg);
+	if (curlex->lexstr) printf("`%s' found\n",curlex->lexstr);
+	else
+	{
+		if (curlex->type==KeyWord)
+		{
+			printf("`%s' found\n",StrKeyWords[curlex->lexnum]);
+			return;
+		}
+		if (curlex->type==Number) printf("`%d' found\n",curlex->lexnum);
+		else
+			if (curlex->type==Equal) printf("`==' found\n");
+			else printf("`%c' found\n",curlex->lexnum);
+	}
+}
