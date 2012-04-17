@@ -33,7 +33,7 @@ class fsm
 	lexlist* newchar(int,int);
 };
 
-class scaner
+class scanner
 {
 	fsm myfsm;
 	int line;
@@ -44,7 +44,7 @@ class scaner
 
 	public:
 
-	scaner(): line(1), begin(0), end(0) {};
+	scanner(): line(1), begin(0), end(0) {};
 	lexlist* run(int);
 };
 

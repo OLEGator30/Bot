@@ -4,7 +4,7 @@
 #include <string.h>
 #include "scanner.hpp"
 
-lexlist* scaner::run(int fd)
+lexlist* scanner::run(int fd)
 {
 	int i;
 	char str[128];
@@ -28,7 +28,7 @@ lexlist* scaner::run(int fd)
 	return end;
 }
 
-lexlist* scaner::addnewlex(lexlist *list,lexlist* p)
+lexlist* scanner::addnewlex(lexlist *list,lexlist* p)
 {
 	list->next=p;
 	if (p->next) p=p->next;

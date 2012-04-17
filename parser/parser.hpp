@@ -22,15 +22,18 @@ class parser
 	void Exp1();
 	void Arg1();
 	void Arg2();
-	void ComOp();
 	void Exp2();
 	void Exp3();
-	void Op1();
-	void Op2();
 	void IntFun();
 	void Arg();
 	void ArgList();
 	void ArgPrint();
+
+	int Array();
+
+	bool ComOp();
+	bool Op1();
+	bool Op2();
 
 	public:
 

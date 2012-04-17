@@ -1,13 +1,12 @@
 {
 	@begin:
-		print "Month #" ?turn();
-		buy 2 ?raw_price();
-		sell ?production(?my_id()) ?production_price();
-		int $topprod;
-		$topprod=2;
-		if (?raw(?my_id())<$topprod)
-			$topprod=?raw(?my_id());
-		prod $topprod;
+		print "Month #", ?turn();
+		buy(2,?raw_price());
+		sell(?production(),?production_price());
+		int $topprod=2;
+		if (?raw()<$topprod)
+			$topprod=?raw()
+		prod($topprod);
 		endturn;
 		goto @begin;
 }

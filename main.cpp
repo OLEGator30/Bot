@@ -10,7 +10,7 @@
 
 int main()
 {
-	scaner scan;
+	scanner scan;
 	parser pars;
 	int fd;
 	lexlist *list;
