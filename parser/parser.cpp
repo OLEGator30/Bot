@@ -13,23 +13,9 @@ void parser::run(lexlist *l)
 
 void parser::Prog()
 {
-	Block();
-	if (curlex->type!=KeyWord||curlex->lexnum!=sizeof(StrKeyWords))
-		throw parserr("expected `EOF'",curlex);
-}
-
-void parser::Block()
-{
-	if (curlex->type==Bracket&&curlex->lexnum=='{')
-	{
-		newlex();
-		do
-		{
-			LabState();
-		} while (curlex->type!=Bracket||curlex->lexnum!='}');
-		newlex();
-	}
-	else throw parserr("expexted `{'",curlex);
+	while (curlex->type!=KeyWord||
+				curlex->lexnum!=sizeof(StrKeyWords)/sizeof(void*))
+		LabState();
 }
 
 void parser::LabState()
@@ -62,11 +48,20 @@ void parser::State()
 			if (curlex->type==Bracket&&curlex->lexnum==')')
 			{
 				newlex();
-				SimpleSt();
+				LabState();
 			}
 			else throw parserr("expected `)'",curlex);
 		}
 		else throw parserr("expected `('",curlex);
+	}
+	else if (curlex->type==Bracket&&curlex->lexnum=='{')
+	{
+		newlex();
+		do
+		{
+			LabState();
+		} while (curlex->type!=Bracket||curlex->lexnum!='}');
+		newlex();
 	}
 	else
 	{
@@ -111,6 +106,7 @@ void parser::SimpleSt()
 		k=Array();
 		if (curlex->type==Operation&&curlex->lexnum=='=')
 		{
+			++k; // warning
 			newlex();
 			Exp1();
 		}
@@ -147,7 +143,7 @@ void parser::SimpleSt()
 		newlex();
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexEndturn)
 		newlex();
-	else Block();
+	else throw parserr("expected operator",curlex);
 }
 
 void parser::Exp()

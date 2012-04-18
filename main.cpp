@@ -44,7 +44,7 @@ int main()
 		list=list->next;
 		delete p;
 	}
-	delete list;
+	delete list; // delete last node
 	return 0;
 }
 

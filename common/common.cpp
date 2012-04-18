@@ -48,3 +48,8 @@ void lexlist::print()
 			else printf("%c (%s)\n",lexnum,states2str(type));
 	}
 }
+
+lexlist::~lexlist()
+{
+	if (lexstr) delete[] lexstr;
+}

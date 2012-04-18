@@ -19,6 +19,7 @@ struct lexlist
 
 	lexlist();
 	void print();
+	~lexlist();
 };
 
 int strtoint (char*);

@@ -38,12 +38,15 @@ void parserr::print() const
 	{
 		if (curlex->type==KeyWord)
 		{
-			printf("`%s' found\n",StrKeyWords[curlex->lexnum]);
+			if (curlex->lexnum==(sizeof(StrKeyWords)/sizeof(void*)))
+				printf ("`EOF' found\n");
+			else
+				printf("`%s' found\n",StrKeyWords[curlex->lexnum]);
 			return;
 		}
 		if (curlex->type==Number) printf("`%d' found\n",curlex->lexnum);
 		else
 			if (curlex->type==Equal) printf("`==' found\n");
-			else printf("`%c' found\n",curlex->lexnum);
+			else printf("`%c' %d found\n",curlex->lexnum,curlex->type);
 	}
 }

@@ -1,15 +1,13 @@
-<Prog>			->	<Block> 'EOF'
-<Block>			->	'{' <LabState> { <LabState> } '}'
+<Prog>			->	{ <LabState> } 'EOF'
 <LabState>	->	<Lab> <State>
 <Lab>				->	labelname ':' | eps
-<State>			->	'if' '(' <Exp> ')' <SimpleSt> | <SimpleSt> ';'
-<SimpleSt>	->	<Block> |
-								'int' varname [ <Array> | <VarArg> ] { ',' varname [ <Array> | <VarArg> ] } |
+<State>			->	'if' '(' <Exp> ')' <LabState> | <SimpleSt> ';' | '{' <LabState> { <LabState> } '}'
+<SimpleSt>	->	'int' varname [ <Array> | <VarArg> ] { ',' varname [ <Array> | <VarArg> ] } |
 								varname <Array> '=' <Exp1> |
 								'goto' labname |
 								'print' <ArgList> |
 								'buy' <Arg2> | 'sell' <Arg2> |
-								'prod' <Arg1>
+								'prod' <Arg1> |
 								'build' | 'turn'
 <Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>
 <Exp1>			->	<Exp2> { <Op1> <Exp2> }

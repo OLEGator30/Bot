@@ -1,16 +1,16 @@
+int $a=10, $b=15, $temp;
+
+@start:
+if ($a<$b)
 {
-if ((($mynose == $otstoi))|(($moskow == $Volgograd))) {
-$c = 1;
-	@begin:
-		print "Month #", ?turn(), $a, $b, $c, "asd";
-		buy(2,?raw_price());
-		sell(?production(),$a);
-		int $topprod=2;
-		if (?raw() == 		128 )$topprod
-		$topprod=?raw();
-		prod($topprod);
-		endturn; $1 = 2;
-		$a = -($b * 10) + -(-2-2) * $a + 8 - ?raw_price();
-		goto 			@begin; if ($a == 12) { $s = 2; if ($s == 2) $d = 4 $f = 4; }
+	$temp=$a;
+	$a=$b;
+	$b=$temp;	
 }
+$temp=$a-$b;
+if ($temp>0)
+{
+	$b=$temp;
+	goto @start;
 }
+print $b;

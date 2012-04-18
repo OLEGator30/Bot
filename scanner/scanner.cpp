@@ -325,6 +325,6 @@ lexlist* fsm::addnewlex()
 	p=new lexlist;
 	p->line=line;
 	p->type=KeyWord;
-	p->lexnum=sizeof(StrKeyWords);
+	p->lexnum=sizeof(StrKeyWords)/sizeof(void*);
 	return p;
 }

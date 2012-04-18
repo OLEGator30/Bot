@@ -42,10 +42,7 @@ void classbuf::write(char c)
 
 char *classbuf::read() const
 {
-	char *str;
-	
-	str=new char[weight+1];
-	return strcpy(str,buffer);
+	return buffer; // but someone can make delete[]
 }
 
 void classbuf::free()

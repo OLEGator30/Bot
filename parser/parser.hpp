@@ -12,7 +12,6 @@ class parser
 	void newlex();
 
 	void Prog();
-	void Block();
 	void LabState();
 	void Lab();
 	void State();
