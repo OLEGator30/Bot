@@ -277,11 +277,11 @@ lexlist* fsm::addnewlex(LexType type)
 	p->line=line;
 	if (type==KeyWord)
 	{
-		unsigned int i=0;
+		int i=0,k=sizeof(StrKeyWords)/sizeof(void*);
 
-		for (;i<sizeof(StrKeyWords);++i)
+		for (;i<k;++i)
 			if (strcmp(buffer.read(),StrKeyWords[i])==0) break;
-		if (i==sizeof(StrKeyWords))
+		if (i==k)
 		{
 			buffer.write(": not a key word\n");
 			throw scanerr(buffer.read(),line);

@@ -147,7 +147,7 @@ void parser::SimpleSt()
 		newlex();
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexEndturn)
 		newlex();
-	else throw parserr("expected ...",curlex);
+	else Block();
 }
 
 void parser::Exp()
