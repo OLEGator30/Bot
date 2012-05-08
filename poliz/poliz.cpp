@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "poliz.hpp"
 #include "../errors/errors.hpp"
 
@@ -314,9 +315,27 @@ PolizElem* PolizFunNeg::EvaluateFun(PolizItem **stack) const
 	return new PolizInt(res);
 }
 
-PolizElem* PolizPrint::EvaluateFun(PolizItem **stack) const
+void PolizPrint::Evaluate(PolizItem **stack,PolizItem *poliz,
+																							PolizItem **curcmd) const
 {
-	return 0;
+	PolizElem *operand=Pop(stack);
+	PolizInt *i=dynamic_cast<PolizInt*>(operand);
+	if (!i)
+	{
+		PolizPrintEnd *j=dynamic_cast<PolizPrintEnd*>(operand);
+		if (!j) throw polizerr("WTF??");
+		(*curcmd)=(*curcmd)->next;
+	}
+	else
+	{
+		(*this).Evaluate(stack,poliz,curcmd);
+		printf("%d\n",i->Get());
+	}
+}
+
+PolizElem* PolizPrintEnd::Clone() const
+{
+	return new PolizPrintEnd();
 }
 
 PolizElem* PolizSell::EvaluateFun(PolizItem **stack) const

@@ -1,0 +1,19 @@
+int $a, $b, $temp;
+
+$a=5;
+$b=15;
+
+@start:
+if ($a<$b)
+{
+	$temp=$a;
+	$a=$b;
+	$b=$temp;	
+}
+$temp=$a-$b;
+if ($temp>0)
+{
+	$b=$temp;
+	goto @start;
+}
+print($b);

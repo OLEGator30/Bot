@@ -137,10 +137,12 @@ void parser::SimpleSt()
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexPrint)
 	{
+		PolizPrintEnd *temp1=new PolizPrintEnd;
+		addpolizelem(temp1);
 		newlex();
 		ArgList();
-		PolizPrint *temp=new PolizPrint; // ???
-		addpolizelem(temp);
+		PolizPrint *temp2=new PolizPrint;
+		addpolizelem(temp2);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexSell)
 	{

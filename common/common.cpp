@@ -167,3 +167,23 @@ varitem* Tables::getvar(char *str)
 {
 	return foundvar(str);
 }
+
+void Tables::check()
+{
+	varitem *tempvar=varlist;
+	while (tempvar)
+	{
+		if (tempvar->decl)
+			tempvar=tempvar->next;
+		else
+			throw polizerr("var not decl");
+	}
+	labitem *templab=lablist;
+	while (templab)
+	{
+		if (templab->decl)
+			templab=templab->next;
+		else
+			throw polizerr("var not decl");
+	}
+}

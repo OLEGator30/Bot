@@ -1,19 +1,10 @@
-int $a, $b, $temp;
+int $a,$b;
 
-$a=5;
-$b=15;
+$a=-1;
+$b=$a+2;
+$a=$a+6;
 
-@start:
-if ($a<$b)
-{
-	$temp=$a;
-	$a=$b;
-	$b=$temp;	
-}
-$temp=$a-$b;
-if ($temp>0)
-{
-	$b=$temp;
-	goto @start;
-}
-print($b);
+$c=1+$a;
+print($a,$b,$c);
+
+int $c;

@@ -214,13 +214,22 @@ class PolizFunNeg : public PolizFunction
 	PolizElem* EvaluateFun(PolizItem**) const;
 };
 
-class PolizPrint : public PolizFunction
+class PolizPrint : public PolizElem
 {
 	public:
 
 	PolizPrint() {}
 	virtual ~PolizPrint() {}
-	PolizElem* EvaluateFun(PolizItem**) const;
+	void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+};
+
+class PolizPrintEnd : public PolizConst
+{
+	public:
+
+	PolizPrintEnd() {}
+	virtual ~PolizPrintEnd() {}
+	virtual PolizElem* Clone() const;
 };
 
 class PolizSell : public PolizFunction

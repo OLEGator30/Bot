@@ -60,7 +60,7 @@ class Tables
 	void decllab(char*,int);
 	void declvar(char*);
 	varitem* getvar(char*);
-	bool check();
+	void check();
 };
 
 extern Tables table;
