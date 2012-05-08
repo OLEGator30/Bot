@@ -7,6 +7,7 @@
 #include "common/common.hpp"
 #include "scanner/scanner.hpp"
 #include "parser/parser.hpp"
+#include "poliz/poliz.hpp"
 
 int main()
 {
@@ -14,6 +15,7 @@ int main()
 	parser pars;
 	int fd;
 	lexlist *list;
+	PolizItem *poliz;
 
 	if ((fd=open("input",O_RDONLY))==-1)
 	{
@@ -22,29 +24,15 @@ int main()
 	}
 	try
 	{
-		list=scan.run(fd); // launch scaner
+		list=scan.run(fd); // launch scanner
 		close(fd);
-		pars.run(list); // launch parser
+		poliz=pars.run(list); // launch parser
 	}
-	catch (const scanerr &err)
+	catch (const errors &err)
 	{
 		err.print();
 		return 1;
 	}
-	catch (const parserr &err)
-	{
-		err.print();
-		return 1;
-	}
-
-	while (list->next) // print except last node
-	{
-		list->print();
-		lexlist *p=list;
-		list=list->next;
-		delete p;
-	}
-	delete list; // delete last node
 	return 0;
 }
 

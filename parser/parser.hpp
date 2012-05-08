@@ -4,10 +4,12 @@
 #include "../common/common.hpp"
 #include "../errors/errors.hpp"
 #include "../scanner/scanner.hpp"
+#include "../poliz/poliz.hpp"
 
 class parser
 {
 	lexlist *curlex;
+	PolizItem *poliz;
 
 	void newlex();
 
@@ -28,16 +30,17 @@ class parser
 	void ArgList();
 	void ArgPrint();
 
-	int Array();
+	bool Array();
+	int ComOp();
+	int Op1();
+	int Op2();
 
-	bool ComOp();
-	bool Op1();
-	bool Op2();
+	void addpolizelem(PolizElem*);
 
 	public:
 
-	parser(){}
-	void run(lexlist*);
+	parser();
+	PolizItem* run(lexlist*);
 };
 
 #endif

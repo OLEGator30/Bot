@@ -24,7 +24,7 @@ lexlist* scanner::run(int fd)
 	temp=myfsm.newchar(0,line);
 	if (temp) end=addnewlex(end,temp);
 	end=begin->next;
-	delete begin; // remove first node
+	// delete begin; // remove first node
 	return end;
 }
 
@@ -145,24 +145,43 @@ lexlist* fsm::varproc(char c)
 	if (inchar(c)) { buffer.write(c); return 0; }
 	else if (inoperations(c))
 	{
+		varitem *item=new varitem(buffer.read());
+		table.addnewvar(item);
 		temp=addnewlex(Variable);
 		temp->next=addnewlex(c,Operation);
 		return temp;
 	}
 	else if (individers(c))
 	{
+		varitem *item=new varitem(buffer.read());
+		table.addnewvar(item);
 		temp=addnewlex(Variable);
 		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
 	else if (inbrackets(c))
 	{
+		varitem *item=new varitem(buffer.read());
+		table.addnewvar(item);
 		temp=addnewlex(Variable);
 		temp->next=addnewlex(c,Bracket);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(Variable); return temp; }
-	else if (c=='=') { temp=addnewlex(Variable); state=Equ; return temp; }
+	else if (inspaces(c))
+	{
+		varitem *item=new varitem(buffer.read());
+		table.addnewvar(item);
+		temp=addnewlex(Variable);
+		return temp;
+	}
+	else if (c=='=')
+	{
+		varitem *item=new varitem(buffer.read());
+		table.addnewvar(item);
+		temp=addnewlex(Variable);
+		state=Equ;
+		return temp;
+	}
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -175,11 +194,19 @@ lexlist* fsm::labproc(char c)
 	if (inchar(c)) { buffer.write(c); return 0; }
 	else if (individers(c))
 	{
+		labitem *item=new labitem(buffer.read());
+		table.addnewlab(item);
 		temp=addnewlex(Label);
 		temp->next=addnewlex(c,Divider);
 		return temp;
 	}
-	else if (inspaces(c)) { temp=addnewlex(Label); return temp; }
+	else if (inspaces(c))
+	{
+		labitem *item=new labitem(buffer.read());
+		table.addnewlab(item);
+		temp=addnewlex(Label);
+		return temp;
+	}
 	buffer.write(c);
 	buffer.write(": unexpected sequence of charecters\n");
 	throw scanerr(buffer.read(),line);
@@ -241,7 +268,7 @@ lexlist* fsm::newchar(int c,int ln)
 
 	if (c==0)
 		if (state!=Home)
-			throw scanerr("unexpected end of file\n",line);
+			throw scanerr("missed \"\n",line);
 		else
 		{
 			lexlist *tmp;

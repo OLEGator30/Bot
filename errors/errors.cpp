@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "errors.hpp"
 
+errors::~errors()
+{
+	delete[] msg;
+}
+
 scanerr::scanerr(const char* str,int ln)
 {
 	int len=strlen(str);
@@ -9,11 +14,6 @@ scanerr::scanerr(const char* str,int ln)
 	msg=new char[len+1];
 	strcpy(msg,str);
 	line=ln;
-}
-
-errors::~errors()
-{
-	delete[] msg;
 }
 
 void scanerr::print() const
@@ -47,6 +47,19 @@ void parserr::print() const
 		if (curlex->type==Number) printf("`%d' found\n",curlex->lexnum);
 		else
 			if (curlex->type==Equal) printf("`==' found\n");
-			else printf("`%c' %d found\n",curlex->lexnum,curlex->type);
+			else printf("`%c' found\n",curlex->lexnum);
 	}
+}
+
+polizerr::polizerr(const char* str)
+{
+	int len=strlen(str);
+
+	msg=new char[len+1];
+	strcpy(msg,str);
+}
+
+void polizerr::print() const
+{
+	printf("%s\n",msg);
 }

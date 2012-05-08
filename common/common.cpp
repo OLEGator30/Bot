@@ -1,6 +1,9 @@
-#include "common.hpp"
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include "common.hpp"
+#include "../errors/errors.hpp"
+
+Tables table;
 
 const char* StrKeyWords[9]=
 { "if","goto","print","int","buy","sell","prod","build","endturn" };
@@ -14,7 +17,7 @@ const char* states2str(LexType type)
 	else if (type==Label) return "label";
 	else if (type==Operation) return "operation";
 	else if (type==Bracket) return "bracket";
-	return "FAIL!"; // g++ wants it...
+	return "FAIL!";
 }
 
 int strtoint(char *s)
@@ -29,7 +32,7 @@ int strtoint(char *s)
 	return k;
 }
 
-lexlist::lexlist() { lexstr=0; lexnum=0; next=0; }
+lexlist::lexlist(): lexstr(0), lexnum(0), next(0) {}
 
 void lexlist::print()
 {
@@ -49,7 +52,118 @@ void lexlist::print()
 	}
 }
 
-lexlist::~lexlist()
+labitem::labitem(char *str): decl(false), next(0)
 {
-	if (lexstr) delete[] lexstr;
+	name=new char[strlen(str)+1];
+	strcpy(name,str);
+}
+
+labitem::~labitem()
+{
+	if (name) delete[] name;
+}
+
+varitem::varitem(char *str): decl(false), next(0)
+{
+	name=new char[strlen(str)+1];
+	strcpy(name,str);
+}
+
+varitem::~varitem()
+{
+	if (name) delete[] name;
+}
+
+Tables::Tables(): lablist(0), varlist(0) {}
+
+labitem* Tables::foundlab(char *str)
+{
+	if (lablist)
+	{
+		labitem *temp=lablist;
+
+		while (strcmp(temp->name,str))
+		{
+			temp=temp->next;
+			if (!temp)
+				return 0;
+		}
+		return temp;
+	}
+	return 0;
+}
+
+varitem* Tables::foundvar(char *str)
+{
+	if (varlist)
+	{
+		varitem *temp=varlist;
+
+		while (strcmp(temp->name,str))
+		{
+			temp=temp->next;
+			if (!temp)
+				return 0;
+		}
+		return temp;
+	}
+	return 0;
+}
+
+void Tables::addnewlab(labitem *item)
+{
+	if (lablist)
+	{
+		if (!foundlab(item->name))
+		{
+			labitem *temp=lablist;
+			while (temp->next)
+				temp=temp->next;
+			temp->next=item;
+		}
+		else
+			delete item;
+	}
+	else
+		lablist=item;
+}
+
+void Tables::addnewvar(varitem *item)
+{
+	if (varlist)
+	{
+		if (!foundvar(item->name))
+		{
+			varitem *temp=varlist;
+			while (temp->next)
+				temp=temp->next;
+			temp->next=item;
+		}
+		else
+			delete item;
+	}
+	else
+		varlist=item;
+}
+
+void Tables::decllab(char *str,int val)
+{
+	labitem *temp=foundlab(str);
+	if (temp->decl)
+		throw polizerr("redeclaration of label");
+	temp->decl=true;
+	temp->val=val;
+}
+
+void Tables::declvar(char *str)
+{
+	varitem *temp=foundvar(str);
+	if (temp->decl)
+		throw polizerr("rediclaration of variable");
+	temp->decl=true;
+}
+
+varitem* Tables::getvar(char *str)
+{
+	return foundvar(str);
 }

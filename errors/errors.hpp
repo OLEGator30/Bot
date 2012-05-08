@@ -11,6 +11,8 @@ class errors
 	
 	char* msg;
 
+	public:
+
 	errors() {}
 	virtual ~errors();
 	virtual void print() const =0;
@@ -24,7 +26,7 @@ class scanerr : public errors
 
 	scanerr(const char*,int);
 	virtual ~scanerr() {}
-	void print() const;
+	virtual void print() const;
 };
 
 class parserr : public errors
@@ -35,7 +37,16 @@ class parserr : public errors
 
 	parserr(const char*,lexlist*);
 	virtual ~parserr() {}
-	void print() const;
+	virtual void print() const;
+};
+
+class polizerr : public errors
+{
+	public:
+
+	polizerr(const char*);
+	virtual ~polizerr() {}
+	virtual void print() const;
 };
 
 #endif
