@@ -15,7 +15,7 @@ int main()
 	parser pars;
 	int fd;
 	lexlist *list;
-	PolizItem *poliz, *stack=0, *curcmd;
+	PolizItem *stack=0, *curcmd;
 
 	if ((fd=open("input",O_RDONLY))==-1)
 	{
@@ -26,12 +26,12 @@ int main()
 	{
 		list=scan.run(fd); // launch scanner
 		close(fd);
-		poliz=curcmd=pars.run(list); // launch parser
+		curcmd=pars.run(list); // launch parser
 		table.check();
 		while (curcmd)
 		{
 			PolizElem *temp=curcmd->elem;
-			temp->Evaluate(&stack,poliz,&curcmd);
+			temp->Evaluate(&stack,&curcmd);
 		}
 	}
 	catch (const errors &err)

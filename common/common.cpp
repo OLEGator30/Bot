@@ -52,10 +52,17 @@ void lexlist::print()
 	}
 }
 
-labitem::labitem(char *str): decl(false), next(0)
+PolizItem::PolizItem(PolizElem *e): elem(e), next(0) {}
+
+labitem::labitem(char *str): decl(false), val(0), next(0)
 {
-	name=new char[strlen(str)+1];
-	strcpy(name,str);
+	if (str)
+	{
+		name=new char[strlen(str)+1];
+		strcpy(name,str);
+	}
+	else
+		name=0;
 }
 
 labitem::~labitem()
@@ -146,7 +153,7 @@ void Tables::addnewvar(varitem *item)
 		varlist=item;
 }
 
-void Tables::decllab(char *str,int val)
+void Tables::decllab(char *str,PolizItem *val)
 {
 	labitem *temp=foundlab(str);
 	if (temp->decl)
@@ -161,11 +168,6 @@ void Tables::declvar(char *str)
 	if (temp->decl)
 		throw polizerr("rediclaration of variable");
 	temp->decl=true;
-}
-
-varitem* Tables::getvar(char *str)
-{
-	return foundvar(str);
 }
 
 void Tables::check()

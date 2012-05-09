@@ -10,6 +10,7 @@ class parser
 {
 	lexlist *curlex;
 	PolizItem *poliz;
+	PolizItem *curpolizelem;
 
 	void newlex();
 

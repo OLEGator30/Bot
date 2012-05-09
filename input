@@ -1,10 +1,7 @@
-int $a,$b;
-
-$a=-1;
-$b=$a+2;
-$a=$a+6;
-
-$c=1+$a;
-print($a,$b,$c);
-
-int $c;
+int $label;
+if (4<5)
+{
+	$label=5;
+	print($label);
+}
+print(5);

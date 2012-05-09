@@ -1,6 +1,10 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include "../poliz/poliz.hpp"
+
+class PolizElem;
+
 extern const char* StrKeyWords[9];
 
 enum LexType { KeyWord, Function, Variable, Label, Number, String,
@@ -21,15 +25,24 @@ struct lexlist
 	void print();
 };
 
+struct PolizItem
+{
+	PolizElem *elem;
+	PolizItem *next;
+
+	PolizItem(PolizElem*);
+};
+
 struct labitem
 {
 	char *name;
 	bool decl;
-	int val;
+	PolizItem *val;
 	labitem *next;
 
 	labitem(char*);
 	~labitem();
+	void setval(PolizItem*);
 };
 
 struct varitem
@@ -49,17 +62,16 @@ class Tables
 {
 	labitem* lablist;
 	varitem* varlist;
-	labitem* foundlab(char*);
-	varitem* foundvar(char*);
 
 	public:
 
 	Tables();
 	void addnewlab(labitem*);
 	void addnewvar(varitem*);
-	void decllab(char*,int);
+	void decllab(char*,PolizItem*);
 	void declvar(char*);
-	varitem* getvar(char*);
+	labitem* foundlab(char*);
+	varitem* foundvar(char*);
 	void check();
 };
 

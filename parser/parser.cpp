@@ -1,12 +1,12 @@
 #include "parser.hpp"
 
-parser::parser(): poliz(0) {}
+parser::parser(): poliz(0), curpolizelem(0) {}
 
 void parser::newlex()
 {
-	// lexlist *temp=curlex;
+	lexlist *temp=curlex;
 	curlex=curlex->next;
-	// delete temp;
+	delete temp;
 }
 
 PolizItem* parser::run(lexlist *l)
@@ -21,7 +21,7 @@ void parser::Prog()
 	while (curlex->type!=KeyWord||
 											curlex->lexnum!=sizeof(StrKeyWords)/sizeof(void*))
 		LabState();
-	// delete curlex;
+	delete curlex;
 }
 
 void parser::LabState()
@@ -34,7 +34,7 @@ void parser::Lab()
 {
 	if (curlex->type==Label)
 	{
-		table.decllab(curlex->lexstr,PolizItem::curnum+1);
+		table.decllab(curlex->lexstr,curpolizelem);
 		newlex();
 		if (curlex->type==Divider&&curlex->lexnum==':')
 			newlex();
@@ -59,7 +59,7 @@ void parser::State()
 				addpolizelem(temp1);
 				newlex();
 				LabState();
-				temp->SetVal(PolizItem::curnum+1);
+				temp->SetVal(curpolizelem);
 			}
 			else throw parserr("expected `)'",curlex);
 		}
@@ -433,12 +433,10 @@ void parser::ArgPrint()
 void parser::addpolizelem(PolizElem *elem)
 {
 	if (!poliz)
-		poliz=new PolizItem(elem);
+		curpolizelem=poliz=new PolizItem(elem);
 	else
 	{
-		PolizItem *temp=poliz;
-		while (temp->next)
-			temp=temp->next;
-		temp->next=new PolizItem(elem);
+		curpolizelem->next=new PolizItem(elem);
+		curpolizelem=curpolizelem->next;
 	}
 }

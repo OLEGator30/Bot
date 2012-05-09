@@ -4,16 +4,15 @@
 #include "../common/common.hpp"
 
 struct PolizItem;
+struct labitem;
+struct varitem;
 
 class PolizElem
 {
 	public:
 
-	virtual void Evaluate(PolizItem**,PolizItem*,PolizItem**) const = 0;
+	virtual void Evaluate(PolizItem**,PolizItem**) const = 0;
 	virtual ~PolizElem() {}
-
-	protected:
-
 	static void Push(PolizItem**,PolizElem*);
 	static PolizElem* Pop(PolizItem**);
 };
@@ -24,7 +23,7 @@ class PolizOpGo : public PolizElem
 
 	PolizOpGo() {}
 	virtual ~PolizOpGo() {}
-	virtual void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+	virtual void Evaluate(PolizItem**,PolizItem**) const;
 };
 
 class PolizOpGoFalse : public PolizElem
@@ -33,18 +32,18 @@ class PolizOpGoFalse : public PolizElem
 
 	PolizOpGoFalse() {}
 	virtual ~PolizOpGoFalse() {}
-	virtual void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+	virtual void Evaluate(PolizItem**,PolizItem**) const;
 };
 
 class PolizConst : public PolizElem
 {
 	virtual PolizElem* Clone() const = 0;
-	virtual void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+	virtual void Evaluate(PolizItem**,PolizItem**) const;
 };
 
 class PolizFunction : public PolizElem
 {
-	virtual void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+	virtual void Evaluate(PolizItem**,PolizItem**) const;
 	virtual PolizElem* EvaluateFun(PolizItem**) const = 0;
 };
 
@@ -86,15 +85,16 @@ class PolizVarAddr : public PolizConst
 
 class PolizLabel : public PolizConst
 {
-	int value;
+	labitem *item;
 
 	public:
 
-	PolizLabel(int);
+	PolizLabel(char*);
+	PolizLabel(PolizItem*);
 	virtual ~PolizLabel() {}
-	void SetVal(int);
 	virtual PolizElem* Clone() const;
-	int Get() const;
+	PolizItem* Get() const;
+	void SetVal(PolizItem*);
 };
 
 class PolizVar : public PolizFunction
@@ -220,7 +220,7 @@ class PolizPrint : public PolizElem
 
 	PolizPrint() {}
 	virtual ~PolizPrint() {}
-	void Evaluate(PolizItem**,PolizItem*,PolizItem**) const;
+	void Evaluate(PolizItem**,PolizItem**) const;
 };
 
 class PolizPrintEnd : public PolizConst
@@ -275,18 +275,6 @@ class PolizTurn : public PolizFunction
 	PolizTurn() {}
 	virtual ~PolizTurn() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
-};
-
-// ...
-
-struct PolizItem
-{
-	int num;
-	static int curnum;
-	PolizElem *elem;
-	PolizItem *next;
-
-	PolizItem(PolizElem*);
 };
 
 #endif

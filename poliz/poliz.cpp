@@ -2,10 +2,6 @@
 #include "poliz.hpp"
 #include "../errors/errors.hpp"
 
-int PolizItem::curnum=0;
-
-PolizItem::PolizItem(PolizElem *e): elem(e), num(++curnum), next(0) {}
-
 void PolizElem::Push(PolizItem **stack, PolizElem *elem)
 {
 	PolizItem *temp=*stack;
@@ -42,15 +38,13 @@ PolizElem* PolizElem::Pop(PolizItem **stack)
 	return elem;
 }
 
-void PolizConst::Evaluate(PolizItem **stack,PolizItem *poliz,
-																							PolizItem **curcmd) const
+void PolizConst::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	Push(stack,Clone());
 	*curcmd=(*curcmd)->next;
 }
 
-void PolizFunction::Evaluate(PolizItem **stack,PolizItem *poliz,
-																							PolizItem **curcmd) const
+void PolizFunction::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *res=EvaluateFun(stack);
 	if (res) Push(stack, res);
@@ -81,7 +75,7 @@ char* PolizString::Get() const
 	return str;
 }
 
-PolizVarAddr::PolizVarAddr(char* str): item(table.getvar(str)) {}
+PolizVarAddr::PolizVarAddr(char* str): item(table.foundvar(str)) {}
 
 int &PolizVarAddr::Get() const
 {
@@ -93,52 +87,57 @@ PolizElem* PolizVarAddr::Clone() const
 	return new PolizVarAddr(item->name);
 }
 
-PolizLabel::PolizLabel(int a): value(a) {}
-
-void PolizLabel::SetVal(int a)
+PolizLabel::PolizLabel(char *str)
 {
-	value=a;
+	if (str)
+		item=table.foundlab(str);
+	else
+		item=0;
+}
+
+void PolizLabel::SetVal(PolizItem *poliz)
+{
+	item=new labitem(0);
+	item->val=poliz;
+}
+
+PolizLabel::PolizLabel(PolizItem *poliz)
+{
+	item=new labitem(0);
+	item->val=poliz;
 }
 
 PolizElem* PolizLabel::Clone() const
 {
-	return new PolizLabel(value);
+	return new PolizLabel(item->val);
 }
 
-int PolizLabel::Get() const
+PolizItem* PolizLabel::Get() const
 {
-	return value;
+	return item->val;
 }
 
-void PolizOpGo::Evaluate(PolizItem **stack,PolizItem *poliz,
-																							PolizItem **curcmd) const
+void PolizOpGo::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizLabel *lab=dynamic_cast<PolizLabel*>(operand);
 	if (!lab) throw polizerr("not a label");
-	PolizItem *addr=poliz;
-	for (int num=lab->Get(); num>1; --num)
-		addr=addr->next;
-	*curcmd=addr;
+	*curcmd=(lab->Get())->next;
 	delete operand;
 }
 
-void PolizOpGoFalse::Evaluate(PolizItem **stack,PolizItem *poliz,
-																							PolizItem **curcmd) const
+void PolizOpGoFalse::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizLabel *lab=dynamic_cast<PolizLabel*>(operand1);
 	if (!lab) throw polizerr("not a label");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *exp=dynamic_cast<PolizInt*>(operand2);
-	if (!lab) throw polizerr("not a label");
-	if (exp)
-	{
-		PolizItem *addr=poliz;
-		for (int num=lab->Get(); num>1; --num)
-			addr=addr->next;
-		*curcmd=addr;
-	}
+	if (!exp) throw polizerr("not an int");
+	if (!(exp->Get()))
+		*curcmd=(lab->Get())->next;
+	else
+		*curcmd=(*curcmd)->next;
 	delete operand1;
 	delete operand2;
 }
@@ -315,8 +314,7 @@ PolizElem* PolizFunNeg::EvaluateFun(PolizItem **stack) const
 	return new PolizInt(res);
 }
 
-void PolizPrint::Evaluate(PolizItem **stack,PolizItem *poliz,
-																							PolizItem **curcmd) const
+void PolizPrint::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizInt *i=dynamic_cast<PolizInt*>(operand);
@@ -328,7 +326,7 @@ void PolizPrint::Evaluate(PolizItem **stack,PolizItem *poliz,
 	}
 	else
 	{
-		(*this).Evaluate(stack,poliz,curcmd);
+		(*this).Evaluate(stack,curcmd);
 		printf("%d\n",i->Get());
 	}
 }
