@@ -1,7 +1,4 @@
-int $a, $b, $temp;
-
-$a=5;
-$b=15;
+int $a=10, $b=25, $temp;
 
 @start:
 if ($a<$b)
@@ -10,10 +7,8 @@ if ($a<$b)
 	$a=$b;
 	$b=$temp;	
 }
-$temp=$a-$b;
-if ($temp>0)
-{
-	$b=$temp;
+$a=$a-$b;
+if ($a>0)
 	goto @start;
-}
+
 print($b);
