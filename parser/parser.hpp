@@ -11,6 +11,7 @@ class parser
 	lexlist *curlex;
 	PolizItem *poliz;
 	PolizItem *curpolizelem;
+	int line;
 
 	void newlex();
 
@@ -20,7 +21,7 @@ class parser
 	void State();
 	void Exp();
 	void SimpleSt();
-	void VarArg();
+	bool VarArg();
 	void Exp1();
 	void Arg1();
 	void Arg2();

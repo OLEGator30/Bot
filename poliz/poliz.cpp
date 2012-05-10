@@ -75,7 +75,11 @@ char* PolizString::Get() const
 	return str;
 }
 
-PolizVarAddr::PolizVarAddr(char* str): item(table.foundvar(str)) {}
+PolizVarAddr::PolizVarAddr(char* str): item(table.foundvar(str))
+{
+	if (!(item->decl))
+		throw polizerr("var not decl");
+}
 
 int &PolizVarAddr::Get() const
 {

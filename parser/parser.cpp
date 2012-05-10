@@ -6,12 +6,14 @@ void parser::newlex()
 {
 	lexlist *temp=curlex;
 	curlex=curlex->next;
+	line=curlex->line;
 	delete temp;
 }
 
 PolizItem* parser::run(lexlist *l)
 {
 	curlex=l;
+	line=curlex->line;
 	Prog();
 	return poliz;
 }
@@ -53,7 +55,7 @@ void parser::State()
 			Exp();
 			if (curlex->type==Bracket&&curlex->lexnum==')')
 			{
-				PolizLabel *temp=new PolizLabel(0);
+				PolizLabel *temp=new PolizLabel((char*)0);
 				addpolizelem(temp);
 				PolizOpGoFalse *temp1=new PolizOpGoFalse;
 				addpolizelem(temp1);
@@ -92,19 +94,34 @@ void parser::SimpleSt()
 			newlex();
 			if (curlex->type==Variable)
 			{
+				PolizItem *tmpcur=curpolizelem;
 				table.declvar(curlex->lexstr);
+				PolizVarAddr *temp=new PolizVarAddr(curlex->lexstr);
+				addpolizelem(temp);
 				newlex();
 				if (Array())
 				{
+					delete temp;
+					curpolizelem=tmpcur;
+					if (tmpcur)
+						tmpcur->next=0;
+					else
+						poliz=0;
 					// array declaration
 				}
 				else
-				{
-					VarArg(); // dosen't work yet
-				}
+					if (!VarArg())
+					{
+						delete temp;
+						curpolizelem=tmpcur;
+						if (tmpcur)
+							tmpcur->next=0;
+						else
+							poliz=0;
+					}
 			}
-			else throw parserr("declaration of variable or array expected",
-																																curlex);
+			else
+				throw parserr("declaration of variable or array expected",curlex);
 		} while (curlex->type==Divider&&curlex->lexnum==',');
 	}
 	else if (curlex->type==Variable)
@@ -127,7 +144,7 @@ void parser::SimpleSt()
 		newlex();
 		if (curlex->type==Label)
 		{
-			PolizLabel *temp3=new PolizLabel(0); // ??
+			PolizLabel *temp3=new PolizLabel(curlex->lexstr); // ??
 			addpolizelem(temp3);
 			PolizOpGo *temp4=new PolizOpGo;
 			addpolizelem(temp4);
@@ -378,13 +395,17 @@ void parser::Arg2()
 	else throw parserr("expected `('",curlex);
 }
 
-void parser::VarArg()
+bool parser::VarArg()
 {
 	if (curlex->type==Operation&&curlex->lexnum=='=')
 	{
 		newlex();
 		Exp1();
+		PolizFunAssig *temp=new PolizFunAssig;
+		addpolizelem(temp);
+		return true;
 	}
+	return false;
 }
 
 bool parser::Array()
