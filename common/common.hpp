@@ -50,8 +50,7 @@ struct varitem
 	char *name;
 	bool decl;
 	int val;
-	// int idx;
-	// varitem *nextidx;
+	varitem *nextidx;
 	varitem *next;
 
 	varitem(char*);

@@ -75,20 +75,22 @@ char* PolizString::Get() const
 	return str;
 }
 
-PolizVarAddr::PolizVarAddr(char* str): item(table.foundvar(str))
+PolizVarAddr::PolizVarAddr(char* str,int i): item(table.foundvar(str))
 {
 	if (!(item->decl))
 		throw polizerr("var not decl");
+	for (;i>0;--i)
+		item=item->nextidx;
 }
 
-int &PolizVarAddr::Get() const
+varitem* PolizVarAddr::Get() const
 {
-	return item->val;
+	return item;
 }
 
 PolizElem* PolizVarAddr::Clone() const
 {
-	return new PolizVarAddr(item->name);
+	return new PolizVarAddr(item->name,0);
 }
 
 PolizLabel::PolizLabel(char *str)
@@ -151,7 +153,40 @@ PolizElem* PolizVar::EvaluateFun(PolizItem **stack) const
 	PolizElem *operand=Pop(stack);
 	PolizVarAddr *i=dynamic_cast<PolizVarAddr*>(operand);
 	if (!i) throw polizerr("not an varaddr");
-	return new PolizInt(i->Get());
+	return new PolizInt((i->Get())->val);
+}
+
+PolizIdx::PolizIdx(bool i): set(i) {}
+
+PolizElem* PolizIdx::EvaluateFun(PolizItem **stack) const
+{
+	PolizElem *operand1=Pop(stack);
+	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
+	if (!i1) throw polizerr("not an int");
+	PolizElem *operand2=Pop(stack);
+	PolizVarAddr *i2=dynamic_cast<PolizVarAddr*>(operand2);
+	if (!i2) throw polizerr("not an addr");
+	varitem *temp=i2->Get();
+	int i=i1->Get();
+	if (set) --i;
+	for (;i>0;--i)
+	{
+		varitem *t=temp;
+		temp=temp->nextidx;
+		if (!temp)
+		{
+			if (set)
+			{
+				temp=new varitem(t->name);
+				t->nextidx=temp;
+			}
+			else
+				throw polizerr("var not decl");
+		}
+	}
+	delete operand1;
+	delete operand2;
+	return new PolizVarAddr(temp->name,i1->Get());
 }
 
 PolizElem* PolizFunPlus::EvaluateFun(PolizItem **stack) const
@@ -301,8 +336,8 @@ PolizElem* PolizFunAssig::EvaluateFun(PolizItem **stack) const
 	if (!i1) throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizVarAddr *i2=dynamic_cast<PolizVarAddr*>(operand2);
-	if (!i2) throw polizerr("not an int");
-	i2->Get()=i1->Get();
+	if (!i2) throw polizerr("not an addr");
+	(i2->Get())->val=i1->Get();
 	delete operand1;
 	delete operand2;
 	return 0;
@@ -324,14 +359,23 @@ void PolizPrint::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 	PolizInt *i=dynamic_cast<PolizInt*>(operand);
 	if (!i)
 	{
-		PolizPrintEnd *j=dynamic_cast<PolizPrintEnd*>(operand);
-		if (!j) throw polizerr("WTF??");
-		(*curcmd)=(*curcmd)->next;
+		PolizString *j=dynamic_cast<PolizString*>(operand);
+		if (!j)
+		{
+			PolizPrintEnd *k=dynamic_cast<PolizPrintEnd*>(operand);
+			if (!k) throw polizerr("WTF??");
+			(*curcmd)=(*curcmd)->next;
+		}
+		else
+		{
+			(*this).Evaluate(stack,curcmd);
+			printf("%s",j->Get());
+		}
 	}
 	else
 	{
 		(*this).Evaluate(stack,curcmd);
-		printf("%d\n",i->Get());
+		printf("%d",i->Get());
 	}
 }
 

@@ -77,10 +77,10 @@ class PolizVarAddr : public PolizConst
 
 	public:
 
-	PolizVarAddr(char*);
+	PolizVarAddr(char*,int);
 	virtual ~PolizVarAddr() {}
 	virtual PolizElem* Clone() const;
-	int &Get() const;
+	varitem* Get() const;
 };
 
 class PolizLabel : public PolizConst
@@ -103,6 +103,17 @@ class PolizVar : public PolizFunction
 
 	PolizVar() {}
 	virtual ~PolizVar() {}
+	PolizElem* EvaluateFun(PolizItem**) const;
+};
+
+class PolizIdx : public PolizFunction
+{
+	bool set;
+
+	public:
+
+	PolizIdx(bool);
+	virtual ~PolizIdx() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
 };
 

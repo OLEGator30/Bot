@@ -96,20 +96,10 @@ void parser::SimpleSt()
 			{
 				PolizItem *tmpcur=curpolizelem;
 				table.declvar(curlex->lexstr);
-				PolizVarAddr *temp=new PolizVarAddr(curlex->lexstr);
+				PolizVarAddr *temp=new PolizVarAddr(curlex->lexstr,0);
 				addpolizelem(temp);
 				newlex();
-				if (Array())
-				{
-					delete temp;
-					curpolizelem=tmpcur;
-					if (tmpcur)
-						tmpcur->next=0;
-					else
-						poliz=0;
-					// array declaration
-				}
-				else
+				if (!Array(true))
 					if (!VarArg())
 					{
 						delete temp;
@@ -126,10 +116,10 @@ void parser::SimpleSt()
 	}
 	else if (curlex->type==Variable)
 	{
-		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr);
+		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr,0);
 		addpolizelem(temp1);
 		newlex();
-		// Array();
+		Array(false);
 		if (curlex->type==Operation&&curlex->lexnum=='=')
 		{
 			newlex();
@@ -276,11 +266,12 @@ void parser::Exp3()
 {
 	if (curlex->type==Variable)
 	{
-		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr);
+		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr,0);
 		addpolizelem(temp1);
+		newlex();
+		Array(false);
 		PolizVar *temp2=new PolizVar;
 		addpolizelem(temp2);
-		newlex();
 	}
 	else if (curlex->type==Number)
 	{
@@ -331,9 +322,9 @@ int parser::ComOp()
 	else if (curlex->type==Operation&&
 															(curlex->lexnum=='<'||curlex->lexnum=='>'))
 	{
-		lexlist *temp=curlex;
+		int temp=curlex->lexnum;
 		newlex();
-		return temp->lexnum;
+		return temp;
 	}
 	return 0;
 }
@@ -343,9 +334,9 @@ int parser::Op1()
 	if (curlex->type==Operation&&
 					(curlex->lexnum=='-'||curlex->lexnum=='|'||curlex->lexnum=='+'))
 	{
-		lexlist *temp=curlex;
+		int temp=curlex->lexnum;
 		newlex();
-		return temp->lexnum;
+		return temp;
 	}
 	return 0;
 }
@@ -356,9 +347,9 @@ int parser::Op2()
 													(curlex->lexnum=='*'||curlex->lexnum=='/'||
 													curlex->lexnum=='%'||curlex->lexnum=='&'))
 	{
-		lexlist *temp=curlex;
+		int temp=curlex->lexnum;
 		newlex();
-		return temp->lexnum;
+		return temp;
 	}
 	return 0;
 }
@@ -408,7 +399,7 @@ bool parser::VarArg()
 	return false;
 }
 
-bool parser::Array()
+bool parser::Array(bool set)
 {
 	if (curlex->type==Bracket&&curlex->lexnum=='[')
 	{
@@ -417,8 +408,11 @@ bool parser::Array()
 		if (curlex->type==Bracket&&curlex->lexnum==']')
 			newlex();
 		else throw parserr("expected `]'",curlex);
+		PolizIdx *temp=new PolizIdx(set);
+		addpolizelem(temp);
+		return true;
 	}
-	return 0;
+	return false;
 }
 
 void parser::ArgList()

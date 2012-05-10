@@ -32,7 +32,7 @@ class parser
 	void ArgList();
 	void ArgPrint();
 
-	bool Array();
+	bool Array(bool);
 	int ComOp();
 	int Op1();
 	int Op2();

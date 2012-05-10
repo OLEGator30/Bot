@@ -39,6 +39,7 @@ int main()
 		err.print();
 		return 1;
 	}
+	printf("\n");
 	return 0;
 }
 

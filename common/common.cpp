@@ -67,10 +67,10 @@ labitem::labitem(char *str): decl(false), val(0), next(0)
 
 labitem::~labitem()
 {
-	if (name) delete[] name;
+	// if (name) delete[] name;
 }
 
-varitem::varitem(char *str): decl(false), next(0)
+varitem::varitem(char *str): decl(false), nextidx(0), next(0)
 {
 	name=new char[strlen(str)+1];
 	strcpy(name,str);
@@ -78,7 +78,7 @@ varitem::varitem(char *str): decl(false), next(0)
 
 varitem::~varitem()
 {
-	if (name) delete[] name;
+	// if (name) delete[] name;
 }
 
 Tables::Tables(): lablist(0), varlist(0) {}
@@ -128,8 +128,8 @@ void Tables::addnewlab(labitem *item)
 				temp=temp->next;
 			temp->next=item;
 		}
-		else
-			delete item;
+		// else
+			// delete item;
 	}
 	else
 		lablist=item;
@@ -146,8 +146,8 @@ void Tables::addnewvar(varitem *item)
 				temp=temp->next;
 			temp->next=item;
 		}
-		else
-			delete item;
+		// else
+			// delete item;
 	}
 	else
 		varlist=item;

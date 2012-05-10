@@ -12,7 +12,7 @@
 <Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>
 <Exp1>			->	<Exp2> { <Op1> <Exp2> }
 <Exp2>			->	<Exp3> { <Op2> <Exp3> }
-<Exp3>			->	varname | number | function |
+<Exp3>			->	varname <Array> | number | function |
 								'!' <Exp3> | '-' <Exp3> | '(' <Exp> ')'
 <CompOp>		->	'==' | '<' | '>'
 <Op1>				->	'+' | '-' | '|'
