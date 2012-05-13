@@ -8,15 +8,17 @@
 								'print' <ArgList> |
 								'buy' <Arg2> | 'sell' <Arg2> |
 								'prod' <Arg1> |
-								'build' | 'turn'
+								'build' <Arg0> |
+								'turn' <Arg0>
 <Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>
 <Exp1>			->	<Exp2> { <Op1> <Exp2> }
 <Exp2>			->	<Exp3> { <Op2> <Exp3> }
-<Exp3>			->	varname <Array> | number | function |
+<Exp3>			->	varname <Array> | number | funcname [ <Arg0> | <Arg1> ] |
 								'!' <Exp3> | '-' <Exp3> | '(' <Exp> ')'
 <CompOp>		->	'==' | '<' | '>'
 <Op1>				->	'+' | '-' | '|'
 <Op2>				->	'*' | '/' | '%' | '&'
+<Arg0>			->	'(' ')'
 <Arg1>			->	'(' <Exp1> ')'
 <Arg2>			->	'(' <Exp1> ',' <Exp1> ')'
 <VarArg>		->	'=' <Exp1> | eps

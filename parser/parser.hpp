@@ -23,11 +23,11 @@ class parser
 	void SimpleSt();
 	bool VarArg();
 	void Exp1();
+	void Arg0();
 	void Arg1();
 	void Arg2();
 	void Exp2();
 	void Exp3();
-	void IntFun();
 	void Arg();
 	void ArgList();
 	void ArgPrint();

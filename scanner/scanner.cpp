@@ -24,7 +24,7 @@ lexlist* scanner::run(int fd)
 	temp=myfsm.newchar(0,line);
 	if (temp) end=addnewlex(end,temp);
 	end=begin->next;
-	// delete begin; // remove first node
+	delete begin; // remove first node
 	return end;
 }
 

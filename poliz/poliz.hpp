@@ -2,6 +2,7 @@
 #define POLIZ_HPP
 
 #include "../common/common.hpp"
+#include "../functions/functions.hpp"
 
 struct PolizItem;
 struct labitem;
@@ -15,6 +16,7 @@ class PolizElem
 	virtual ~PolizElem() {}
 	static void Push(PolizItem**,PolizElem*);
 	static PolizElem* Pop(PolizItem**);
+	virtual void print() const = 0;
 };
 
 class PolizOpGo : public PolizElem
@@ -24,6 +26,7 @@ class PolizOpGo : public PolizElem
 	PolizOpGo() {}
 	virtual ~PolizOpGo() {}
 	virtual void Evaluate(PolizItem**,PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizOpGoFalse : public PolizElem
@@ -33,6 +36,7 @@ class PolizOpGoFalse : public PolizElem
 	PolizOpGoFalse() {}
 	virtual ~PolizOpGoFalse() {}
 	virtual void Evaluate(PolizItem**,PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizConst : public PolizElem
@@ -57,6 +61,7 @@ class PolizInt : public PolizConst
 	virtual ~PolizInt() {}
 	virtual PolizElem* Clone() const;
 	int Get() const;
+	virtual void print() const;
 };
 
 class PolizString : public PolizConst
@@ -66,9 +71,10 @@ class PolizString : public PolizConst
 	public:
 
 	PolizString(char*);
-	virtual ~PolizString() {}
+	virtual ~PolizString();
 	virtual PolizElem* Clone() const;
 	char* Get() const;
+	virtual void print() const;
 };
 
 class PolizVarAddr : public PolizConst
@@ -81,6 +87,7 @@ class PolizVarAddr : public PolizConst
 	virtual ~PolizVarAddr() {}
 	virtual PolizElem* Clone() const;
 	varitem* Get() const;
+	virtual void print() const;
 };
 
 class PolizLabel : public PolizConst
@@ -95,6 +102,7 @@ class PolizLabel : public PolizConst
 	virtual PolizElem* Clone() const;
 	PolizItem* Get() const;
 	void SetVal(PolizItem*);
+	virtual void print() const;
 };
 
 class PolizVar : public PolizFunction
@@ -104,6 +112,7 @@ class PolizVar : public PolizFunction
 	PolizVar() {}
 	virtual ~PolizVar() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizIdx : public PolizFunction
@@ -115,6 +124,7 @@ class PolizIdx : public PolizFunction
 	PolizIdx(bool);
 	virtual ~PolizIdx() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunPlus : public PolizFunction
@@ -124,6 +134,7 @@ class PolizFunPlus : public PolizFunction
 	PolizFunPlus() {}
 	virtual ~PolizFunPlus() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunMinus : public PolizFunction
@@ -133,6 +144,7 @@ class PolizFunMinus : public PolizFunction
 	PolizFunMinus() {}
 	virtual ~PolizFunMinus() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunDivision : public PolizFunction
@@ -142,6 +154,7 @@ class PolizFunDivision : public PolizFunction
 	PolizFunDivision() {}
 	virtual ~PolizFunDivision() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunMultipl : public PolizFunction
@@ -151,6 +164,7 @@ class PolizFunMultipl : public PolizFunction
 	PolizFunMultipl() {}
 	virtual ~PolizFunMultipl() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunPercent : public PolizFunction
@@ -160,6 +174,7 @@ class PolizFunPercent : public PolizFunction
 	PolizFunPercent() {}
 	virtual ~PolizFunPercent() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunAnd : public PolizFunction
@@ -169,6 +184,7 @@ class PolizFunAnd : public PolizFunction
 	PolizFunAnd() {}
 	virtual ~PolizFunAnd() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunOr : public PolizFunction
@@ -178,6 +194,7 @@ class PolizFunOr : public PolizFunction
 	PolizFunOr() {}
 	virtual ~PolizFunOr() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunEqu : public PolizFunction
@@ -187,6 +204,7 @@ class PolizFunEqu : public PolizFunction
 	PolizFunEqu() {}
 	virtual ~PolizFunEqu() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunMore : public PolizFunction
@@ -196,6 +214,7 @@ class PolizFunMore : public PolizFunction
 	PolizFunMore() {}
 	virtual ~PolizFunMore() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunLess : public PolizFunction
@@ -205,6 +224,7 @@ class PolizFunLess : public PolizFunction
 	PolizFunLess() {}
 	virtual ~PolizFunLess() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunAssig : public PolizFunction
@@ -214,6 +234,7 @@ class PolizFunAssig : public PolizFunction
 	PolizFunAssig() {}
 	virtual ~PolizFunAssig() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizFunNeg : public PolizFunction
@@ -223,6 +244,7 @@ class PolizFunNeg : public PolizFunction
 	PolizFunNeg() {}
 	virtual ~PolizFunNeg() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizPrint : public PolizElem
@@ -231,6 +253,7 @@ class PolizPrint : public PolizElem
 
 	PolizPrint() {}
 	virtual ~PolizPrint() {}
+	virtual void print() const;
 	void Evaluate(PolizItem**,PolizItem**) const;
 };
 
@@ -241,6 +264,7 @@ class PolizPrintEnd : public PolizConst
 	PolizPrintEnd() {}
 	virtual ~PolizPrintEnd() {}
 	virtual PolizElem* Clone() const;
+	virtual void print() const;
 };
 
 class PolizSell : public PolizFunction
@@ -250,6 +274,7 @@ class PolizSell : public PolizFunction
 	PolizSell() {}
 	virtual ~PolizSell() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizBuy : public PolizFunction
@@ -259,6 +284,7 @@ class PolizBuy : public PolizFunction
 	PolizBuy() {}
 	virtual ~PolizBuy() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizProd : public PolizFunction
@@ -268,6 +294,7 @@ class PolizProd : public PolizFunction
 	PolizProd() {}
 	virtual ~PolizProd() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizBuild : public PolizFunction
@@ -277,6 +304,7 @@ class PolizBuild : public PolizFunction
 	PolizBuild() {}
 	virtual ~PolizBuild() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 class PolizTurn : public PolizFunction
@@ -286,6 +314,33 @@ class PolizTurn : public PolizFunction
 	PolizTurn() {}
 	virtual ~PolizTurn() {}
 	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
+};
+
+class PolizFunction0 : public PolizFunction
+{
+	char *name;
+	FuncTable table;
+
+	public:
+
+	PolizFunction0(char*);
+	virtual ~PolizFunction0();
+	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
+};
+
+class PolizFunction1 : public PolizFunction
+{
+	char *name;
+	FuncTable table;
+
+	public:
+
+	PolizFunction1(char*);
+	virtual ~PolizFunction1();
+	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
 };
 
 #endif

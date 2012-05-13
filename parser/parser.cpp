@@ -1,3 +1,4 @@
+#include "../functions/functions.hpp"
 #include "parser.hpp"
 
 parser::parser(): poliz(0), curpolizelem(0) {}
@@ -57,7 +58,7 @@ void parser::State()
 			{
 				PolizLabel *temp=new PolizLabel((char*)0);
 				addpolizelem(temp);
-				PolizOpGoFalse *temp1=new PolizOpGoFalse;
+				PolizElem *temp1=new PolizOpGoFalse;
 				addpolizelem(temp1);
 				newlex();
 				LabState();
@@ -96,7 +97,7 @@ void parser::SimpleSt()
 			{
 				PolizItem *tmpcur=curpolizelem;
 				table.declvar(curlex->lexstr);
-				PolizVarAddr *temp=new PolizVarAddr(curlex->lexstr,0);
+				PolizElem *temp=new PolizVarAddr(curlex->lexstr,0);
 				addpolizelem(temp);
 				newlex();
 				if (!Array(true))
@@ -116,16 +117,16 @@ void parser::SimpleSt()
 	}
 	else if (curlex->type==Variable)
 	{
-		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr,0);
-		addpolizelem(temp1);
+		PolizElem *temp=new PolizVarAddr(curlex->lexstr,0);
+		addpolizelem(temp);
 		newlex();
 		Array(false);
 		if (curlex->type==Operation&&curlex->lexnum=='=')
 		{
 			newlex();
 			Exp1();
-			PolizFunAssig *temp2=new PolizFunAssig;
-			addpolizelem(temp2);
+			temp=new PolizFunAssig;
+			addpolizelem(temp);
 		}
 		else parserr("expected `='",curlex);
 	}
@@ -134,54 +135,54 @@ void parser::SimpleSt()
 		newlex();
 		if (curlex->type==Label)
 		{
-			PolizLabel *temp3=new PolizLabel(curlex->lexstr); // ??
-			addpolizelem(temp3);
-			PolizOpGo *temp4=new PolizOpGo;
-			addpolizelem(temp4);
+			PolizElem *temp=new PolizLabel(curlex->lexstr);
+			addpolizelem(temp);
+			temp=new PolizOpGo;
+			addpolizelem(temp);
 			newlex();
 		}
 		else parserr("name of label expected",curlex);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexPrint)
 	{
-		PolizPrintEnd *temp1=new PolizPrintEnd;
-		addpolizelem(temp1);
+		PolizElem *temp=new PolizPrintEnd;
+		addpolizelem(temp);
 		newlex();
 		ArgList();
-		PolizPrint *temp2=new PolizPrint;
-		addpolizelem(temp2);
+		temp=new PolizPrint;
+		addpolizelem(temp);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexSell)
 	{
 		newlex();
 		Arg2();
-		PolizSell *temp=new PolizSell; // ???
+		PolizElem *temp=new PolizSell;
 		addpolizelem(temp);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexBuy)
 	{
 		newlex();
 		Arg2();
-		PolizBuy *temp=new PolizBuy; // ???
+		PolizElem *temp=new PolizBuy;
 		addpolizelem(temp);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexProd)
 	{
 		newlex();
 		Arg1();
-		PolizProd *temp=new PolizProd; // ???
+		PolizElem *temp=new PolizProd;
 		addpolizelem(temp);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexBuild)
 	{
 		newlex();
-		PolizBuild *temp=new PolizBuild; // ???
+		PolizElem *temp=new PolizBuild;
 		addpolizelem(temp);
 	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexEndturn)
 	{
 		newlex();
-		PolizTurn *temp=new PolizTurn; // ???
+		PolizElem *temp=new PolizTurn;
 		addpolizelem(temp);
 	}
 	else throw parserr("expected operator",curlex);
@@ -266,39 +267,53 @@ void parser::Exp3()
 {
 	if (curlex->type==Variable)
 	{
-		PolizVarAddr *temp1=new PolizVarAddr(curlex->lexstr,0);
-		addpolizelem(temp1);
+		PolizElem *temp=new PolizVarAddr(curlex->lexstr,0);
+		addpolizelem(temp);
 		newlex();
 		Array(false);
-		PolizVar *temp2=new PolizVar;
-		addpolizelem(temp2);
+		temp=new PolizVar;
+		addpolizelem(temp);
 	}
 	else if (curlex->type==Number)
 	{
-		PolizInt *temp=new PolizInt(curlex->lexnum);
+		PolizElem *temp=new PolizInt(curlex->lexnum);
 		addpolizelem(temp);
 		newlex();
 	}
-	/*
 	else if (curlex->type==Function)
 	{
-		newlex();
+		FuncTable temp;
+		char *str=curlex->lexstr;
+
+		if (temp.getnum(str))
+		{
+			newlex();
+			Arg1();
+			PolizElem *temp=new PolizFunction1(str);
+			addpolizelem(temp);
+		}
+		else
+		{
+			newlex();
+			Arg0();
+			PolizElem *temp=new PolizFunction0(str);
+			addpolizelem(temp);
+		}
 	}
-	*/
 	else if (curlex->type==Operation&&curlex->lexnum=='-')
 	{
-		PolizInt *temp1=new PolizInt(0);
-		addpolizelem(temp1);
+		PolizElem *temp=new PolizInt(0);
+		addpolizelem(temp);
 		newlex();
 		Exp3();
-		PolizFunMinus *temp2=new PolizFunMinus;
-		addpolizelem(temp2);
+		temp=new PolizFunMinus;
+		addpolizelem(temp);
 	}
 	else if (curlex->type==Operation&&curlex->lexnum=='!')
 	{
 		newlex();
 		Exp3();
-		PolizFunNeg *temp=new PolizFunNeg;
+		PolizElem *temp=new PolizFunNeg;
 		addpolizelem(temp);
 	}
 	else if (curlex->type==Bracket&&curlex->lexnum=='(')
@@ -354,6 +369,18 @@ int parser::Op2()
 	return 0;
 }
 
+void parser::Arg0()
+{
+	if (curlex->type==Bracket&&curlex->lexnum=='(')
+	{
+		newlex();
+		if (curlex->type==Bracket&&curlex->lexnum==')')
+			newlex();
+		else throw parserr("expected `)'",curlex);
+	}
+	else throw parserr("expected `('",curlex);
+}
+
 void parser::Arg1()
 {
 	if (curlex->type==Bracket&&curlex->lexnum=='(')
@@ -392,7 +419,7 @@ bool parser::VarArg()
 	{
 		newlex();
 		Exp1();
-		PolizFunAssig *temp=new PolizFunAssig;
+		PolizElem *temp=new PolizFunAssig;
 		addpolizelem(temp);
 		return true;
 	}
@@ -408,7 +435,7 @@ bool parser::Array(bool set)
 		if (curlex->type==Bracket&&curlex->lexnum==']')
 			newlex();
 		else throw parserr("expected `]'",curlex);
-		PolizIdx *temp=new PolizIdx(set);
+		PolizElem *temp=new PolizIdx(set);
 		addpolizelem(temp);
 		return true;
 	}
@@ -437,7 +464,7 @@ void parser::ArgPrint()
 {
 	if (curlex->type==String)
 	{
-		PolizString *temp=new PolizString(curlex->lexstr);
+		PolizElem *temp=new PolizString(curlex->lexstr);
 		addpolizelem(temp);
 		newlex();
 	}
@@ -450,8 +477,5 @@ void parser::addpolizelem(PolizElem *elem)
 	if (!poliz)
 		curpolizelem=poliz=new PolizItem(elem);
 	else
-	{
-		curpolizelem->next=new PolizItem(elem);
-		curpolizelem=curpolizelem->next;
-	}
+		curpolizelem=curpolizelem->next=new PolizItem(elem);
 }

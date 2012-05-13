@@ -54,6 +54,7 @@ struct varitem
 	varitem *next;
 
 	varitem(char*);
+	// varitem(const varitem&);
 	~varitem();
 };
 
@@ -65,6 +66,7 @@ class Tables
 	public:
 
 	Tables();
+	~Tables();
 	void addnewlab(labitem*);
 	void addnewvar(varitem*);
 	void decllab(char*,PolizItem*);
@@ -78,5 +80,7 @@ extern Tables table;
 
 int strtoint (char*);
 const char* states2str(LexType);
+void freemem(PolizItem*);
+void printpoliz(PolizItem*);
 
 #endif

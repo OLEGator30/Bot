@@ -32,6 +32,26 @@ int strtoint(char *s)
 	return k;
 }
 
+void freemem(PolizItem* list)
+{
+	while (list)
+	{
+		PolizItem *temp=list;
+		list=list->next;
+		delete temp->elem;
+		delete temp;
+	}
+}
+
+void printpoliz(PolizItem *poliz)
+{
+	while (poliz)
+	{
+		poliz->elem->print();
+		poliz=poliz->next;
+	}
+}
+
 lexlist::lexlist(): lexstr(0), lexnum(0), next(0) {}
 
 void lexlist::print()
@@ -67,18 +87,28 @@ labitem::labitem(char *str): decl(false), val(0), next(0)
 
 labitem::~labitem()
 {
-	// if (name) delete[] name;
+	if (name) delete[] name;
 }
 
 varitem::varitem(char *str): decl(false), nextidx(0), next(0)
 {
-	name=new char[strlen(str)+1];
-	strcpy(name,str);
+	if (str)
+	{
+		name=new char[strlen(str)+1];
+		strcpy(name,str);
+	}
+	else
+		name=0;
 }
+
+/*
+varitem::varitem(const varitem &var): name(0), val(var->val), next(0),
+							nextidx(0), decl(var->decl) {}
+*/
 
 varitem::~varitem()
 {
-	// if (name) delete[] name;
+	if (name) delete[] name;
 }
 
 Tables::Tables(): lablist(0), varlist(0) {}
@@ -128,8 +158,8 @@ void Tables::addnewlab(labitem *item)
 				temp=temp->next;
 			temp->next=item;
 		}
-		// else
-			// delete item;
+		else
+			delete item;
 	}
 	else
 		lablist=item;
@@ -146,8 +176,8 @@ void Tables::addnewvar(varitem *item)
 				temp=temp->next;
 			temp->next=item;
 		}
-		// else
-			// delete item;
+		else
+			delete item;
 	}
 	else
 		varlist=item;
@@ -187,5 +217,26 @@ void Tables::check()
 			templab=templab->next;
 		else
 			throw polizerr("var not decl");
+	}
+}
+
+Tables::~Tables()
+{
+	while (varlist)
+	{
+		varitem *temp=varlist;
+		varlist=varlist->next;
+		while (temp)
+		{
+			varitem *temp1=temp;
+			temp=temp->nextidx;
+			delete temp1;
+		}
+	}
+	while (lablist)
+	{
+		labitem *temp=lablist;
+		lablist=lablist->next;
+		delete temp;
 	}
 }
