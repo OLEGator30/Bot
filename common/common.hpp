@@ -5,13 +5,16 @@
 
 class PolizElem;
 
-extern const char* StrKeyWords[9];
+extern const char* StrKeyWords[10];
 
 enum LexType { KeyWord, Function, Variable, Label, Number, String,
 																	Equal, Operation, Bracket, Divider };
 
 enum KeyWords { LexIf, LexGoto, LexPrint, LexInt, LexBuy, LexSell, LexProd,
-																								LexBuild, LexEndturn };
+																							LexJoin, LexBuild, LexTurn };
+
+enum FuncName { Getid, Players, Bankbuy, Banksell, Buyprice, Sellprice,
+																		Money , Raw , Products , Factories };
 
 struct lexlist
 {

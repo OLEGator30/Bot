@@ -297,6 +297,16 @@ class PolizProd : public PolizFunction
 	virtual void print() const;
 };
 
+class PolizJoin : public PolizFunction
+{
+	public:
+
+	PolizJoin() {}
+	virtual ~PolizJoin() {}
+	PolizElem* EvaluateFun(PolizItem**) const;
+	virtual void print() const;
+};
+
 class PolizBuild : public PolizFunction
 {
 	public:
@@ -320,7 +330,7 @@ class PolizTurn : public PolizFunction
 class PolizFunction0 : public PolizFunction
 {
 	char *name;
-	FuncTable table;
+	FuncClass table;
 
 	public:
 
@@ -333,7 +343,7 @@ class PolizFunction0 : public PolizFunction
 class PolizFunction1 : public PolizFunction
 {
 	char *name;
-	FuncTable table;
+	FuncClass table;
 
 	public:
 

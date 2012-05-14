@@ -1,4 +1,5 @@
 #include "../functions/functions.hpp"
+#include "../errors/errors.hpp"
 #include "parser.hpp"
 
 parser::parser(): poliz(0), curpolizelem(0) {}
@@ -173,15 +174,24 @@ void parser::SimpleSt()
 		PolizElem *temp=new PolizProd;
 		addpolizelem(temp);
 	}
+	else if (curlex->type==KeyWord&&curlex->lexnum==LexJoin)
+	{
+		newlex();
+		Arg0();
+		PolizElem *temp=new PolizJoin;
+		addpolizelem(temp);
+	}
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexBuild)
 	{
 		newlex();
+		Arg0();
 		PolizElem *temp=new PolizBuild;
 		addpolizelem(temp);
 	}
-	else if (curlex->type==KeyWord&&curlex->lexnum==LexEndturn)
+	else if (curlex->type==KeyWord&&curlex->lexnum==LexTurn)
 	{
 		newlex();
+		Arg0();
 		PolizElem *temp=new PolizTurn;
 		addpolizelem(temp);
 	}
@@ -282,7 +292,7 @@ void parser::Exp3()
 	}
 	else if (curlex->type==Function)
 	{
-		FuncTable temp;
+		FuncClass temp;
 		char *str=curlex->lexstr;
 
 		if (temp.getnum(str))

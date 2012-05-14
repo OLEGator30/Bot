@@ -8,6 +8,7 @@
 								'print' <ArgList> |
 								'buy' <Arg2> | 'sell' <Arg2> |
 								'prod' <Arg1> |
+								'join' <Arg0>
 								'build' <Arg0> |
 								'turn' <Arg0>
 <Exp>				->	<Exp1> <CompOp> <Exp1> | <Exp1>

@@ -2,7 +2,6 @@
 #define PARSER_HPP
 
 #include "../common/common.hpp"
-#include "../errors/errors.hpp"
 #include "../scanner/scanner.hpp"
 #include "../poliz/poliz.hpp"
 

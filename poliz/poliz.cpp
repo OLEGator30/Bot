@@ -561,6 +561,16 @@ void PolizBuild::print() const
 	printf("build\n");
 }
 
+PolizElem* PolizJoin::EvaluateFun(PolizItem **stack) const
+{
+	return 0;
+}
+
+void PolizJoin::print() const
+{
+	printf("join\n");
+}
+
 PolizElem* PolizTurn::EvaluateFun(PolizItem **stack) const
 {
 	return 0;

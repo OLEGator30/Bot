@@ -5,8 +5,8 @@
 
 Tables table;
 
-const char* StrKeyWords[9]=
-{ "if","goto","print","int","buy","sell","prod","build","endturn" };
+const char* StrKeyWords[10]=
+{ "if","goto","print","int","buy","sell","prod","join","build","turn" };
 
 const char* states2str(LexType type)
 {
