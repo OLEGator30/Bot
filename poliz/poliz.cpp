@@ -1,6 +1,8 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include "poliz.hpp"
+#include "../client/client.hpp"
 #include "../errors/errors.hpp"
 
 void PolizElem::Push(PolizItem **stack, PolizElem *elem)
@@ -48,7 +50,8 @@ void PolizConst::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 void PolizFunction::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *res=EvaluateFun(stack);
-	if (res) Push(stack, res);
+	if (res)
+		Push(stack, res);
 	*curcmd=(*curcmd)->next;
 }
 
@@ -161,7 +164,8 @@ void PolizOpGo::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizLabel *lab=dynamic_cast<PolizLabel*>(operand);
-	if (!lab) throw polizerr("not a label");
+	if (!lab)
+		throw polizerr("not a label");
 	*curcmd=(lab->Get())->next;
 	delete operand;
 }
@@ -175,10 +179,12 @@ void PolizOpGoFalse::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizLabel *lab=dynamic_cast<PolizLabel*>(operand1);
-	if (!lab) throw polizerr("not a label");
+	if (!lab)
+		throw polizerr("not a label");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *exp=dynamic_cast<PolizInt*>(operand2);
-	if (!exp) throw polizerr("not an int");
+	if (!exp)
+		throw polizerr("not an int");
 	if (!(exp->Get()))
 		*curcmd=(lab->Get())->next;
 	else
@@ -196,7 +202,8 @@ PolizElem* PolizVar::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizVarAddr *i=dynamic_cast<PolizVarAddr*>(operand);
-	if (!i) throw polizerr("not an varaddr");
+	if (!i)
+		throw polizerr("not an varaddr");
 	return new PolizInt((i->Get())->val);
 }
 
@@ -260,10 +267,12 @@ PolizElem* PolizFunPlus::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()+i1->Get();
 	delete operand1;
 	delete operand2;
@@ -279,10 +288,12 @@ PolizElem* PolizFunMinus::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()-i1->Get();
 	delete operand1;
 	delete operand2;
@@ -298,10 +309,12 @@ PolizElem* PolizFunDivision::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()/i1->Get();
 	delete operand1;
 	delete operand2;
@@ -317,10 +330,12 @@ PolizElem* PolizFunMultipl::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()*i1->Get();
 	delete operand1;
 	delete operand2;
@@ -336,10 +351,12 @@ PolizElem* PolizFunPercent::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()%i1->Get();
 	delete operand1;
 	delete operand2;
@@ -355,10 +372,12 @@ PolizElem* PolizFunAnd::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()&&i1->Get();
 	delete operand1;
 	delete operand2;
@@ -374,10 +393,12 @@ PolizElem* PolizFunOr::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()||i1->Get();
 	delete operand1;
 	delete operand2;
@@ -393,10 +414,12 @@ PolizElem* PolizFunEqu::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()==i1->Get();
 	delete operand1;
 	delete operand2;
@@ -412,10 +435,12 @@ PolizElem* PolizFunMore::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()>i1->Get();
 	delete operand1;
 	delete operand2;
@@ -431,10 +456,12 @@ PolizElem* PolizFunLess::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
-	if (!i2) throw polizerr("not an int");
+	if (!i2)
+		throw polizerr("not an int");
 	int res=i2->Get()<i1->Get();
 	delete operand1;
 	delete operand2;
@@ -450,10 +477,12 @@ PolizElem* PolizFunAssig::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand1=Pop(stack);
 	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
-	if (!i1) throw polizerr("not an int");
+	if (!i1)
+		throw polizerr("not an int");
 	PolizElem *operand2=Pop(stack);
 	PolizVarAddr *i2=dynamic_cast<PolizVarAddr*>(operand2);
-	if (!i2) throw polizerr("not an addr");
+	if (!i2)
+		throw polizerr("not an addr");
 	(i2->Get())->val=i1->Get();
 	delete operand1;
 	delete operand2;
@@ -469,7 +498,8 @@ PolizElem* PolizFunNeg::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizInt *i=dynamic_cast<PolizInt*>(operand);
-	if (!i) throw polizerr("not an int");
+	if (!i)
+		throw polizerr("not an int");
 	int res=!(i->Get());
 	delete operand;
 	return new PolizInt(res);
@@ -490,7 +520,8 @@ void PolizPrint::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 		if (!j)
 		{
 			PolizPrintEnd *k=dynamic_cast<PolizPrintEnd*>(operand);
-			if (!k) throw polizerr("WTF??");
+			if (!k)
+				throw polizerr("WTF??");
 			(*curcmd)=(*curcmd)->next;
 		}
 		else
@@ -502,7 +533,7 @@ void PolizPrint::Evaluate(PolizItem **stack,PolizItem **curcmd) const
 	else
 	{
 		(*this).Evaluate(stack,curcmd);
-		printf("%d",i->Get());
+		printf("%d\n",i->Get());
 	}
 }
 
@@ -523,6 +554,17 @@ void PolizPrintEnd::print() const
 
 PolizElem* PolizSell::EvaluateFun(PolizItem **stack) const
 {
+	PolizElem *operand1=Pop(stack);
+	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
+	if (!i1)
+		throw polizerr("not an int");
+	PolizElem *operand2=Pop(stack);
+	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
+	if (!i2)
+		throw polizerr("not an int");
+	function.fsell(i2->Get(),i1->Get());
+	delete operand1;
+	delete operand2;
 	return 0;
 }
 
@@ -533,6 +575,17 @@ void PolizSell::print() const
 
 PolizElem* PolizBuy::EvaluateFun(PolizItem **stack) const
 {
+	PolizElem *operand1=Pop(stack);
+	PolizInt *i1=dynamic_cast<PolizInt*>(operand1);
+	if (!i1)
+		throw polizerr("not an int");
+	PolizElem *operand2=Pop(stack);
+	PolizInt *i2=dynamic_cast<PolizInt*>(operand2);
+	if (!i2)
+		throw polizerr("not an int");
+	function.fbuy(i2->Get(),i1->Get());
+	delete operand1;
+	delete operand2;
 	return 0;
 }
 
@@ -543,6 +596,12 @@ void PolizBuy::print() const
 
 PolizElem* PolizProd::EvaluateFun(PolizItem **stack) const
 {
+	PolizElem *operand=Pop(stack);
+	PolizInt *i=dynamic_cast<PolizInt*>(operand);
+	if (!i)
+		throw polizerr("not an int");
+	function.fprod(i->Get());
+	delete operand;
 	return 0;
 }
 
@@ -553,6 +612,7 @@ void PolizProd::print() const
 
 PolizElem* PolizBuild::EvaluateFun(PolizItem **stack) const
 {
+	function.fbuild();
 	return 0;
 }
 
@@ -563,6 +623,19 @@ void PolizBuild::print() const
 
 PolizElem* PolizJoin::EvaluateFun(PolizItem **stack) const
 {
+	if (function.checkconnect())
+		throw polizerr("repeat connection");
+
+	sock mysock;
+
+	PolizElem *operand=Pop(stack);
+	PolizInt *i=dynamic_cast<PolizInt*>(operand);
+	if (!i)
+		throw polizerr("not an int");
+
+	mysock.joinserv(i->Get());
+	function.servfd(mysock.getfd());
+	function.waitnum();
 	return 0;
 }
 
@@ -573,6 +646,7 @@ void PolizJoin::print() const
 
 PolizElem* PolizTurn::EvaluateFun(PolizItem **stack) const
 {
+	function.fturn();
 	return 0;
 }
 
@@ -594,7 +668,7 @@ PolizFunction0::~PolizFunction0()
 
 PolizElem* PolizFunction0::EvaluateFun(PolizItem **stack) const
 {
-	return new PolizInt(table.internfunc(name));
+	return new PolizInt(function.launch(name));
 }
 
 void PolizFunction0::print() const
@@ -617,9 +691,10 @@ PolizElem* PolizFunction1::EvaluateFun(PolizItem **stack) const
 {
 	PolizElem *operand=Pop(stack);
 	PolizInt *i=dynamic_cast<PolizInt*>(operand);
-	if (!i) throw polizerr("not an int");
+	if (!i)
+		throw polizerr("not an int");
 	delete operand;
-	return new PolizInt(table.internfunc(name,i->Get()));
+	return new PolizInt(function.launch(name,i->Get()));
 }
 
 void PolizFunction1::print() const

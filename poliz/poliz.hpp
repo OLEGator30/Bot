@@ -330,7 +330,6 @@ class PolizTurn : public PolizFunction
 class PolizFunction0 : public PolizFunction
 {
 	char *name;
-	FuncClass table;
 
 	public:
 
@@ -343,7 +342,6 @@ class PolizFunction0 : public PolizFunction
 class PolizFunction1 : public PolizFunction
 {
 	char *name;
-	FuncClass table;
 
 	public:
 

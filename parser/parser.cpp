@@ -177,7 +177,7 @@ void parser::SimpleSt()
 	else if (curlex->type==KeyWord&&curlex->lexnum==LexJoin)
 	{
 		newlex();
-		Arg0();
+		Arg1();
 		PolizElem *temp=new PolizJoin;
 		addpolizelem(temp);
 	}
@@ -295,7 +295,7 @@ void parser::Exp3()
 		FuncClass temp;
 		char *str=curlex->lexstr;
 
-		if (temp.getnum(str))
+		if (temp.getargnum(str))
 		{
 			newlex();
 			Arg1();
