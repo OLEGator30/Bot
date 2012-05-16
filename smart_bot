@@ -1,0 +1,71 @@
+join(3030);
+
+int $maxcol=?players(),$i,$max;
+
+@start:
+
+int $number=?getid(), $money=?money($number), $raw=?raw($number),
+		$products=?products($number);
+
+print("player ",$number);
+print(" money=",$money);
+print(" raw materials=",$raw);
+print(" products=",$products);
+
+if (($money>3999)&($raw>1))
+{
+	prod(2);
+	print("prod ",2);
+}
+if (($money>1999)&($raw==1))
+{
+	prod(1);
+	print("prod ",1);
+}
+
+if (?isbdif())
+{
+	$i=1;
+	$max=0;
+	@lab1:
+	if (?getbdiff($i)>$max)
+		$max=?getbdiff($i);
+	if ($i==$maxcol)
+		goto @fin1;
+	$i=$i+1;
+	goto @lab1;
+	@fin1:
+	buy(2,?buyprice()+$max+5);
+	print("buy 2 ",?buyprice()+$max+5);
+}
+if (!(?isbdif()))
+{
+	buy(2,?buyprice());
+	print("buy 2 ",?buyprice());
+}
+
+if (?issdif())
+{
+	$i=1;
+	$max=0;
+	@lab2:
+	if (?getsdiff($i)>$max)
+		$max=?getsdiff($i);
+	if ($i==$maxcol)
+		goto @fin2;
+	$i=$i+1;
+	goto @lab2;
+	@fin2:
+	sell($products,?sellprice()-$max-5);
+	print("sell (all) ",?buyprice()-$max-5);
+}
+if (!(?issdif()))
+{
+	sell($products,?sellprice());
+	print("sell (all) ",?sellprice());
+}
+
+turn();
+print("turn ");
+
+goto @start;

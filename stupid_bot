@@ -1,0 +1,22 @@
+join(3030);
+
+@label:
+
+print("player ",?getid());
+print(" money=",?money(?getid()));
+print(" raw materials=",?raw(?getid()));
+print(" products=",?products(?getid()));
+
+prod(2);
+print("prod ",2);
+
+buy(2,?buyprice());
+print("buy 2 ",?buyprice());
+
+sell(?products(?getid()),?sellprice());
+print("sell ",?products(?getid()),?sellprice());
+
+turn();
+print("turn");
+
+goto @label;

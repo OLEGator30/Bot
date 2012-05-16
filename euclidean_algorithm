@@ -1,0 +1,17 @@
+int $a=2*3*5*13*5, $b=7*3*5*17;
+
+print("a = ",$a,"; ","b = ",$b,"; ");
+
+@start:
+if ($a<$b)
+{
+	int $temp;
+	$temp=$a;
+	$a=$b;
+	$b=$temp;	
+}
+$a=$a-$b;
+if ($a)
+	goto @start;
+
+print("GCD(a,b) = ",$b);
