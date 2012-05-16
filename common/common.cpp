@@ -101,11 +101,6 @@ varitem::varitem(char *str): decl(false), nextidx(0), next(0)
 		name=0;
 }
 
-/*
-varitem::varitem(const varitem &var): name(0), val(var->val), next(0),
-							nextidx(0), decl(var->decl) {}
-*/
-
 varitem::~varitem()
 {
 	if (name) delete[] name;

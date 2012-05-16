@@ -14,7 +14,8 @@ enum KeyWords { LexIf, LexGoto, LexPrint, LexInt, LexBuy, LexSell, LexProd,
 																							LexJoin, LexBuild, LexTurn };
 
 enum FuncName { Getid, Players, Bankbuy, Banksell, Buyprice, Sellprice,
-																		Money , Raw , Products , Factories };
+											Money , Raw , Products , Factories , Isbdif ,
+											Issdif , Getbdiff , Getsdiff };
 
 struct lexlist
 {
